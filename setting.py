@@ -3,12 +3,12 @@
 
 import sqlite3
 import sys, getopt
-import addstock
+
 
 
 def main(argv):
     try:
-        opts, args = getopt.getopt(argv, "hida:")
+        opts, args = getopt.getopt(argv, "hidta:")
     except getopt.GetoptError:
         print 'setting.py -h help'
 
@@ -23,6 +23,10 @@ def main(argv):
         elif opt == '-d':
             print '删除数据表'
             delete_Stockbasetable()
+            sys.exit()
+        elif opt == '-t':
+            print '创建趋势表'
+            create_trendtable()
             sys.exit()
         # elif opt == '-a':
         #     print '增加数据的格式为：sz,000000,天天股份'
@@ -55,6 +59,53 @@ def create_Stockbasetable():
         print 'Stock base Table created successfully；股票基本表创建成功'
     except:
         print 'The Stock base Table aleady exist!；股票基本表已经存在'
+    conn.commit()
+    conn.close()
+
+def create_trendtable():
+    conn = sqlite3.connect('/Users/liguoliang/UD78/src/db.sqlite3')
+    c = conn.cursor()
+    print "Opened database successfully；连接数据库成功";
+    print "==========================================================";
+    conn1 = sqlite3.connect('/Users/liguoliang/UD78/src/db.sqlite3')
+    c = conn1.cursor()
+    try:
+        c.execute('''CREATE TABLE Sunland_trend
+               (ID INTEGER PRIMARY KEY     NOT NULL ,
+               shrzrz           INT    ,
+               shrqrz           INT     ,
+               szrzrz           INT     ,
+               szrqrz           INT     ,
+               rztrend        INT      ,
+               optdate        date
+               );''')
+        print '趋势表创建成功'
+    except:
+        print '趋势表创建失败'
+    conn.commit()
+    conn.close()
+
+
+def create_trendhistable():
+    conn = sqlite3.connect('/Users/liguoliang/UD78/src/db.sqlite3')
+    c = conn.cursor()
+    print "Opened database successfully；连接数据库成功";
+    print "==========================================================";
+    conn1 = sqlite3.connect('/Users/liguoliang/UD78/src/db.sqlite3')
+    c = conn1.cursor()
+    try:
+        c.execute('''CREATE TABLE Sunland_trendhis
+               (ID INTEGER PRIMARY KEY     NOT NULL ,
+               shrzrz           INT    ,
+               shrqrz           INT     ,
+               szrzrz           INT     ,
+               szrqrz           INT     ,
+               rztrend        INT      ,
+               optdate        date
+               );''')
+        print '趋势表创建成功'
+    except:
+        print '趋势表创建失败'
     conn.commit()
     conn.close()
 

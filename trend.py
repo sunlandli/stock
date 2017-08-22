@@ -3,16 +3,49 @@
 
 
 import tushare as ts
-import datetime,sys
+import datetime,sys,sqlite3
+
+conn = sqlite3.connect('/Users/liguoliang/UD78/src/db.sqlite3')
+conn.text_factory = lambda x: unicode(x, 'utf-8', 'ignore')
+c = conn.cursor()
+
+def addtrenddata(shrzrz1, shrqrz1, szrzrz1, szrqrz1, rztrend1,today1):
+    # conn = sqlite3.connect('/Users/liguoliang/UD78/src/db.sqlite3')
+    # conn.text_factory = lambda x: unicode(x, 'utf-8', 'ignore')
+    # c = conn.cursor()
+    # shrzrz1=shrzrz
+    # co=str(Code)
+    # s=Stockname
+
+    sql_content = '''select * from Sunland_trend where optdate = '%s' ''' %today1
+    c.execute(sql_content)
+    res=c.fetchall()
+    if len(res)>0:
+        print '%s exists' % today1
+    else:
+        sql_content = "INSERT into Sunland_trend (shrzrz,shrqrz,szrzrz,szrqrz,rztrend,optdate) VALUES (?,?,?,?,?,?)"
+        cursor = c.execute(sql_content, [shrzrz1, shrqrz1, szrzrz1, szrqrz1, rztrend1,today1])
+        print '%s added' %today1
+
+    conn.commit()
+    print "执行成功";
+    print "===========================================";
+
 
 def trend(day):
     days=day
+    #today=datetime.datetime.today()
     totalrong_pre=0
     totalrong=0
     #融资融券 15日数据
     start = datetime.date.today()-datetime.timedelta(days)
     #print start.strftime("%Y-%m-%d")
     end = datetime.date.today().strftime("%Y-%m-%d")
+    shrzrz= 0
+    shrqrz = 0
+    szrzrz= 0
+    szrqrz= 0
+    rztrend=0  ##上海融资日增，融券日增，深圳融资日增，融券日增，两市融资日增
 
     ####SH#####
     shma = []
@@ -38,7 +71,8 @@ def trend(day):
     print '最后两交易日资量：',d[1],s[1],d[0],s[0]
     print '*上海券',days,'天增长',c1,'量','增长百分比',percent1,'%','*券最后一日增长',float((s1[0]-s1[1])),'量'
     print '最后两交易日券量：',d[1],s1[1],d[0],s1[0],'差值：',s1[0]-s1[1]
-
+    shrzrz= float((s[0]-s[1])/100000000)
+    shrqrz = float((s1[0]-s1[1]))
     if percent > percent1:
         print '**买'
     elif percent == percent1:
@@ -68,6 +102,10 @@ def trend(day):
     print '*深圳券',days,'天增长',c2,'量','增长百分比',percent2,'%''*券最后一日增长',float((s2[-1]-s2[-2])),'量'
     print '最后两交易日券量：',d[-2],s2[-2],d[-1],s2[-1],'差值：',s2[-1]-s2[-2]
 
+
+    szrzrz= float((s[-1]-s[-2])/100000000)
+    szrqrz= float((s2[-1]-s2[-2]))
+
     if percent > percent2:
         print '**买'
     elif percent == percent2:
@@ -78,9 +116,20 @@ def trend(day):
     print '========================================================================='
     print '计算始日两市总额',long(totalrong_pre)/100000000,'计算终日两市总额：',long(totalrong)/100000000,days,'日差额',long((totalrong-totalrong_pre)/100000000)
     print '========================================================================='
+    rztrend = (totalrong-totalrong_pre)/100000000
+
+    addtrenddata(shrzrz, shrqrz, szrzrz, szrqrz, rztrend,end)
+
+
+
+
 
 if __name__ == '__main__':
     if len(sys.argv)>1:
         day=int(sys.argv[1])
         trend(day)
     else:trend(15)
+
+
+
+
