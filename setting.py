@@ -8,7 +8,7 @@ import sys, getopt
 
 def main(argv):
     try:
-        opts, args = getopt.getopt(argv, "hidta:")
+        opts, args = getopt.getopt(argv, "hidts")
     except getopt.GetoptError:
         print 'setting.py -h help'
 
@@ -27,6 +27,10 @@ def main(argv):
         elif opt == '-t':
             print '创建趋势表'
             create_trendtable()
+            sys.exit()
+        elif opt == '-s':
+            print '创建上海历史趋势表'
+            create_trendshhistable()
             sys.exit()
         # elif opt == '-a':
         #     print '增加数据的格式为：sz,000000,天天股份'
@@ -85,8 +89,17 @@ def create_trendtable():
     conn.commit()
     conn.close()
 
+    """
+               opDate           INT    ,  '交易日期'
+               rzye           INT     ,    '本日融资余额(元)'
+               rzmre           INT     ,    '本日融资买入额'
+               rqyl           INT     ,      '本日融券余量'
+               rqylje        INT      ,     '本日融券余量金额(元)'
+               rqmcl        INT ,           '本日融券卖出量'
+               rzrqjyzl     INT         '本日融资融券余额(元)'
+               """
 
-def create_trendhistable():
+def create_trendshhistable():
     conn = sqlite3.connect('/Users/liguoliang/UD78/src/db.sqlite3')
     c = conn.cursor()
     print "Opened database successfully；连接数据库成功";
@@ -94,18 +107,19 @@ def create_trendhistable():
     conn1 = sqlite3.connect('/Users/liguoliang/UD78/src/db.sqlite3')
     c = conn1.cursor()
     try:
-        c.execute('''CREATE TABLE Sunland_trendhis
+        c.execute('''CREATE TABLE Sunland_trendshhis
                (ID INTEGER PRIMARY KEY     NOT NULL ,
-               shrzrz           INT    ,
-               shrqrz           INT     ,
-               szrzrz           INT     ,
-               szrqrz           INT     ,
-               rztrend        INT      ,
-               optdate        date
+               opDate           INT    , 
+               rzye           INT     , 
+               rzmre           INT     ,  
+               rqyl           INT     ,    
+               rqylje        INT      ,    
+               rqmcl        INT ,         
+               rzrqjyzl     INT         
                );''')
-        print '趋势表创建成功'
+        print '上海趋势历史表创建成功'
     except:
-        print '趋势表创建失败'
+        print '上海趋势历史表创建失败'
     conn.commit()
     conn.close()
 
