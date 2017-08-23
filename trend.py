@@ -118,7 +118,7 @@ def trend(day):
     print '========================================================================='
     rztrend = (totalrong-totalrong_pre)/100000000
 
-    addtrenddata(shrzrz, shrqrz, szrzrz, szrqrz, rztrend,end)
+    addtrenddata(shrzrz, shrqrz, szrzrz, szrqrz, rztrend,d[-1])
 
 
 
