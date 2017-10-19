@@ -1,0 +1,81 @@
+{% extends '../layouts/base.swig' %}
+{% block title %}找回密码 - 小跟班{% endblock %}
+{% block header %}{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block content %}
+<a href="/" class="back-home"><i class="iconfont">&#xe626;</i> 首页</a>
+<div class="container">
+  {{ FlashMessages.renderMessages(messages) }}
+  <div class="login">
+    <div id="loginContent">
+      <!--登录弹出框区域开始-->
+      <div class="lo-header clearfix">
+        <div class="pull-left">
+          <h2>找回密码</h2>
+          <p>请填写注册邮箱以便于找回密码</p>
+        </div>
+      </div>
+      <div class="lo-body">
+        <form class="login-form" action="" method="POST">
+          <input type="hidden" name="action" value="findpw">
+          <div class="form-group">
+            <input class="form-control" name="email" type="email" placeholder="邮箱" required/>
+          </div>
+          {# <div class="form-group">
+            <input class="form-control" name="password" type="password" placeholder="密码" required/>
+          </div>
+          <div class="form-group clearfix">
+            <div class="checkbox pull-left">
+              <label style="font-size:12px;color:#b5b5b6;line-height:20px;">
+                <input type="checkbox" name="auto" checked>记住我，以后两周保持登录</label>
+            </div>
+          </div> #}
+          <div class="form-group">
+            <button type="submit">立即找回</button>
+          </div>
+          {# <div class="text-center" style="height:80px;position:relative;">
+            <div style="width:100%;border-bottom:1px solid #f0f0f0;position:absolute;top:50%;left:0;"></div>
+            <span style="display:block;padding:0 10px;color:#9F9FA0;background-color:#fff;position:absolute;top:50%;left:50%;margin-top:-10px;margin-left:-66px;color:#666;font-size:12px;">或者其他账号登录</span>
+          </div> #}
+          <div class="form-group">
+            {# <a id="weibologin" class="btn btn-block" style="background-color:#e56150;color:#fff;border-radius:2px;margin-bottom:24px;"></a> #}
+            {# <span id="qqLoginBtn" class="btn btn-block"></span> #}
+          </div>
+        </form>
+      </div>
+
+      <div class="lo-footer">
+        <span>
+          {# 没有账号？ #}
+          <a href="/accounts/login">立即登录</a>
+        </span>
+        {# | #}
+        {# <a class="" href="/accounts/findpw">忘记密码？</a> #}
+      </div>
+    </div>
+
+    <div id="snsBind" class="sns-bind" style="display:none">
+      <form class="form-horizontal bind-form" role="form" action="/api/sns/bind/" method="POST" name="bindForm">
+        <input type="hidden" name="openId" value="">
+        <input type="hidden" name="nickname" value="">
+        <input type="hidden" name="avatar" value="">
+        <div class="text-center">
+          <img id="qqAvatar" class="qqavatar" src="" style="width:80px;height:80px;" alt="">
+          <h1 style="padding-bottom:20px;">绑定QQ</h1>
+          <p>由于您是第一次使用QQ帐号登录，所以您需要填写邮箱，并创建一个密码，以后您同样可以使用邮箱和密码进行登录。如果您已有xgban账号，可以输入您在xgban注册的邮箱和密码，将您的QQ帐号与xgban帐号绑定。</p>
+        </div>
+        <div class="form-group has-feedback">
+          <input class="form-control bind-email" name="email" type="email" placeholder="邮箱" required />
+        </div>
+        <div class="form-group mt20 has-feedback">
+          <input class="form-control bind-password" name="password" type="text" placeholder="密码" required />
+        </div>
+        <div class="form-group" style="text-align: center;">
+          <input class="btn fr bind-qq" type="submit" value="绑定" style="width:30%;background-color:#36ACE3;color:#fff;" />
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,277 @@
+.content {
+    width: 100%;
+    .n-body {
+        &:after {
+            content: '';
+            display: table;
+            height: 0;
+            clear: both;
+        }
+        .chart-left {
+            float: left;
+            width: 75%;
+            .chart-table {
+                background-color: #fff;
+                .table-left {
+                    width: 100%;
+                    .menu {
+                        ul {
+                            padding-top: 10px;
+                            margin-left: 10px;
+                            margin-right: 10px;
+                            border-bottom: 1px solid #eee;
+                            li {
+                                float: left;
+                                padding: 3px 15px;
+                                background-color: #fff;
+                                cursor: pointer;
+                                &.active {
+                                    margin-bottom: -1px;
+                                    border: 1px solid #eee;
+                                    border-bottom: none;
+                                }
+                            }
+                        }
+                    }
+                    .table-box {
+                        padding: 10px;
+                        white-space: nowrap;
+                        vertical-align: middle;
+                        div {
+                            width: 49%;
+                        }
+                        table {
+                            // float: left;
+                            width: 100%;
+                            border: 1px solid #eee;
+                            &:nth-child(1) {
+                                margin-right: 1%;
+                            }
+                            thead {
+                                background-color: #ccf;
+                                color: #fff;
+                                font-size: 12px;
+                                th {
+                                    height: 25px;
+                                }
+                            }
+                            tbody {
+                                tr {
+                                    border-bottom: 1px solid #eee;
+                                }
+                                td {
+                                    text-align: center;
+                                    height: 25px;
+                                    border-left: 1px solid #eee;
+                                    box-sizing: border-box;
+                                    &:first-child {
+                                        border-left: none;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .chart-right {
+            float: left;
+            width: 25%;
+            padding-left: 10px;
+            box-sizing: border-box;
+            .content {
+                background-color: #fff;
+            }
+        }
+    }
+    #myChart {
+        height: 316px;
+    }
+}
+
+// .table-right {
+//     padding: 10px;
+//     > div {
+//         margin-bottom: 10px;
+//     }
+//     button {
+//         margin-left: 3px;
+//         width: 40px;
+//         height: 25px;
+//         background-color: #191F26;
+//         color: #fff;
+//         border: none;
+//         border-radius: 2px;
+//         &:nth-child(2) {
+//             width: 60px;
+//             background-color: #369;
+//         }
+//     }
+//     i {
+//         display: inline-block;
+//         border-radius: 2px;
+//         width: 25px;
+//         height: 25px;
+//         color: #666;
+//         text-align: center;
+//         line-height: 25px;
+//         cursor: pointer;
+//         // background-color: #669;
+//     }
+// }
+
+// 右边买盘&卖盘
+.chart-buy-sale {
+    .hd {
+        color: #666;
+        position: relative;
+    }
+    .ft {
+        // height: 150px;
+        overflow: hidden;
+    }
+    .hd-item {
+        width: 50%;
+        height: 36px;
+        padding-left: 10px;
+        padding-right: 10px;
+        line-height: 36px;
+    }
+    .hd-mark {
+        display: inline-block;
+        width: 20px;
+        height: 16px;
+        background-color: #999;
+        color: #fff;
+        border-radius: 6px;
+        line-height: 16px;
+        font-weight: 400;
+        font-size: 12px;
+        margin-top: 10px;
+        text-align: center;
+        text-indent: -2px;
+    }
+    .bd-buy,
+    .bd-sale {
+        height: 20px;
+        // color: #fff;
+        font-size: 12px;
+        line-height: 22px;
+    }
+    .bd {
+        border-top: 1px solid #eee;
+        border-bottom: 1px solid #eee;
+        // background-color: #eee;
+    }
+    .bd-buy {
+        // background-color: #6cf;
+        padding-left: 10px;
+        padding-right: 10px;
+        border-right: 1px solid #eee;
+    }
+    .bd-sale {
+        // background-color: #09f;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    .ft-item {
+        width: 100%;
+        font-size: 12px;
+    }
+    // .ft-sort {
+    //     display: inline-block;
+    //     width: 16px;
+    //     height: 16px;
+    //     text-align: center;
+    //     line-height: 16px;
+    //     color: #fff;
+    //     font-style: normal;
+    //     border-radius: 6px;
+    // }
+    .data-one {
+        color: #6c0;
+        margin-left: 50px;
+    }
+    .ft-item li {
+        // height: 30px;
+        // line-height: 30px;
+        padding: 3px 10px;
+        &:hover {
+            background-color: #f8f8f8;
+        }
+    }
+    .ft-buy-list {
+        // border-right: 1px solid #eee;
+        border-top: 1px solid #eee;
+        li {
+            // &:nth-child(odd) {
+            //     background-color: #fff;
+            // }
+            // &:nth-child(even) {
+            //     background-color: #f3f3f3;
+            // }
+        }
+        // .ft-sort {
+        //     background-color: #6cf;
+        // }
+        // .data-two {
+        //     color: #1C6DB0;
+        // }
+    }
+    .ft-sale-list {
+        // border-left: 1px solid #eee;
+        li {
+            // &:nth-child(odd) {
+            //     background-color: #f3f3f3;
+            // }
+            // &:nth-child(even) {
+            //     background-color: #fff;
+            // }
+        }
+        // .ft-sort {
+        //     background-color: #09f;
+        // }
+        // .data-two {
+        //     color: #B83C31;
+        // }
+    }
+    .arrow-up {
+        cursor: pointer;
+        background-color: #fff;
+        border: 1px solid #eee;
+        color: #999;
+        height: 14px;
+        line-height: 10px;
+        &:hover {
+            background-color: #eee;
+            color: #6cf;
+        }
+    }
+}
+
+// 图例选项
+.stock-chart-legend {
+    padding: 8px 15px;
+    background-color: #fff;
+    .list {
+
+    }
+    .item {
+        float: left;
+        height: 20px;
+        padding: 0px 8px;
+        margin-right: 10px;
+        border-radius: 2px;
+        cursor: pointer;
+        line-height: 20px;
+        font-size: 12px;
+        &:hover {
+            background-color: #999;
+            color: #fff;
+        }
+        &.active {
+            background-color: #999;
+            color: #fff;
+        }
+    }
+}

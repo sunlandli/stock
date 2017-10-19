@@ -1,0 +1,259 @@
+<div id="wrap" class="sp-one-wrap">
+  <div class="container">
+    <div class="sp-one-header">
+      <div class="group-title clearfix">
+        <h2>
+          [[ product.name ]]
+          <small style="color: #999;">[[ product.pid ]]</small>
+        </h2>
+        <span class="following-btn" ng-show="!isFollow" ng-click="followProduct(product._id);isFollow=true">+跟投</span>
+        <span class="following-btn" ng-show="isFollow" ng-click="followProduct(product._id);isFollow=false" style="background-color: #ccc;">-取消跟投</span>
+      </div>
+      <div class="sp-one-main clearfix">
+        <div class="main-left">
+          <div class="group-info-box">
+            <div class="top">
+              <span class="tag mr5" ng-repeat="t in product.tags">[[ t ]]</span>
+              <span class="followers pull-right">
+                <b id="followerNum">[[ product.followersAccount ]]</b>
+                人跟投
+              </span>
+            </div>
+            <ul class="middle nols clearfix">
+              <li>
+                <span>夏普率</span>
+                <br>
+                <span>[[ product.statics.sharpeRatio.toFixed(2) ]]%</span>
+              </li>
+              <li>
+                <span>回撤率</span>
+                <br>
+                <span>[[ product.statics.maxDrawDown.toFixed(2) ]]%</span>
+              </li>
+              <li>
+                <span>交易次数</span>
+                <br>
+                <span>
+                  [[ product.statics.tradingNum ]]
+                </span>
+              </li>
+            </ul>
+            <ul class="middle nols mt20 clearfix">
+              <li>
+                <span>日收益率</span>
+                <br>
+                <span>[[ product.dayEquity.toFixed(2) ]]%</span>
+              </li>
+              <li>
+                <span>月收益率</span>
+                <br>
+                <span>[[ product.monthEquity.toFixed(2) ]]%</span>
+              </li>
+              <li>
+                <span>净值</span>
+                <br>
+                <span>
+                  [[ (product.captial.equity/product.captial.initEquity).toFixed(2) ]]
+                </span>
+              </li>
+            </ul>
+            <div class="bottom clearfix">
+              <h1>[[ ((product.captial.equity-product.captial.initEquity)/product.captial.initEquity*100).toFixed(2) ]]<small>%</small></h1>
+              <span>总收益率</span>
+              <div>
+                <h2>[[ product.creator.name.first ]]</h2>
+                <span>创建于  [[ product.created ]]</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="main-right">
+          <div class="group-creator">
+            <div>
+              <a ui-sref="user({id: product.creator._id})">
+              <img ng-src="[[ product.creator.avatar ]]" alt="">
+              [[ product.creator.name.first ]]
+              </a>
+            </div>
+            <q>
+              [[ product.description ]] <i class="arrow"></i>
+            </q>
+          </div>
+          <div class="hide">
+            <ul class="other-data nols clearfix">
+              <li>
+                <h5>夏普率</h5>
+                <span>[[ product.statics.sharpeRatio.toFixed(1) ]]</span>
+              </li>
+              <li>
+                <h5>回撤率</h5>
+                <span>[[ product.statics.maxDrawDown.toFixed(1) ]]</span>
+              </li>
+              <li>
+                <h5>最大回撤周期</h5>
+                <span>[[ product.statics.maxDrawDownDuration .toFixed(0) ]]</span>
+              </li>
+              <li>
+                <h5>交易次数</h5>
+                <span>[[ product.statics.tradingNum.toFixed(0) ]]</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="group-detail">
+      <div class="group-detail-header">
+        <ul class="gtoup-detail-tab nols clearfix" ng-init="showTab = 1">
+          <li ng-class="{active: showTab == 1}" ng-click="showTab = 1;">交易报表</li>
+          <li ng-class="{active: showTab == 2}" ng-click="showTab = 2;">交易明细</li>
+          <li ng-class="{active: showTab == 3}" ng-click="showTab = 3;">交易持仓</li>
+        </ul>
+      </div>
+      <div class="group-detail-body">
+        <div class="tab-a" ng-show="showTab == 1">
+          <div class="tab-box">
+            <div class="tab-box-header">
+              <span>资金曲线图</span>
+              <!-- <span class="fr">￥4255</span> -->
+            </div>
+            <div>
+              <div id="myLine" style="height:450px;"></div>
+            </div>
+          </div>
+          <div class="mt30 clearfix">
+
+            <div class="tab-box fl" style="width: 40%;">
+              <div class="tab-box-header">
+                <span>交易总笔数</span>
+                <span class="fr">[[ tradeCount ]]</span>
+              </div>
+              <div>
+                <div id="myPie" style="height:450px;"></div>
+              </div>
+            </div>
+
+            <div class="tab-box fl" style="width: 58%; margin-left: 2%;">
+              <div class="tab-box-header">
+                <span>每日收益</span>
+                <!-- <span class="fr">￥4255</span> -->
+              </div>
+              <div>
+                <div id="myBar" style="height:450px;"></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="tab-b" ng-show="showTab == 2">
+          <table>
+            <thead>
+              <tr>
+                <th>股票代码</th>
+                <th>股票名称</th>
+                <th>交易类型</th>
+                <th>股数</th>
+                <th>盈亏金额</th>
+                <th>开仓价格</th>
+                <th>开仓时间</th>
+              </tr>
+            </thead>
+            <tbody ng-init="label={7: '买入', 8: '卖出'}">
+              <tr ng-repeat="item in trans">
+                <td>[[ item.contract ]]</td>
+                <td>[[ item.name ]]</td>
+                <td>[[ label[item.side] ]]</td>
+                <td>[[ item.quantity ]]</td>
+                <td>[[ item.profit.toFixed(2) ]]</td>
+                <td>[[ item.price.toFixed(2) ]]</td>
+                <td>[[ item.datetime | date: 'yyyy-MM-dd HH:mm:ss' ]]</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="tab-c" ng-show="showTab == 3">
+          <table>
+            <thead>
+              <tr>
+                <th>股票代码</th>
+                <th>股票名称</th>
+                <th>总持仓数</th>
+                <th>跟投持仓数</th>
+                <th>持仓盈亏</th>
+                <th>跟投持仓盈亏</th>
+                <th>持仓均价</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="item in pos">
+                <td>[[ item.contract ]]</td>
+                <td>[[ item.name ]]</td>
+                <td>[[ item.quantity ]]</td>
+                <td>[[ item.followQuantity ]]</td>
+                <td>[[ item.totalProfit.toFixed(2) ]]</td>
+                <td>[[ item.followProfit.toFixed(2) ]]</td>
+                <td>[[ item.cost.toFixed(2) ]]</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="group-trand clearfix hide">
+      <div class="trand-line fl">
+        <div class="title">
+          <h4>收益率走势</h4>
+        </div>
+        <div id="myLinexxx" style="height:350px;"></div>
+      </div>
+      <div class="trand-info fl">
+        <div class="title">
+          <h4>历史净值</h4>
+        </div>
+        <div class="history">
+          <ul class="nols">
+            <li ng-repeat="y in yData track by $index">
+              <div class="process" style="width: [[ ((y-yData[0])/yData[0]*100).toFixed(1) ]]%;background-color:#666;"></div>
+              <div class="content">
+                <span>[[ xData[$index] ]]</span>
+                <span class="fr">[[ y.toFixed(3) ]]元</span>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="group-comment">
+      <div class="title mb30">
+        <h4>评论</h4>
+      </div>
+      <div class="comments">
+        <ul id="commentsList" class="comments-list nols">
+          <li class="comment" ng-repeat="item in posts">
+            <a href="javascript:">
+              <div class="author">
+                <img ng-src="[[ item.user.avatar ]]" alt="">
+                <span class="name">[[ item.user.name.first ]]</span>
+                <span class="time fr">[[ item.created | date: 'yyyy-MM-dd HH:mm:ss' ]]</span>
+              </div>
+              <div class="content">[[ item.body ]]</div>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div class="comment-form">
+        <form ng-submit="addPost(formPost)">
+          <textarea ng-model="formPost.body" placeholder="写点关这个组合的想法" required></textarea>
+          <div class="tr mt10">
+            <button type="submit">评 论</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="/javascripts/my-pie.js"></script>
+<script src="/javascripts/my-line.js"></script>

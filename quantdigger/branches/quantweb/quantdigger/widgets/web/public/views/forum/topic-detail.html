@@ -1,0 +1,53 @@
+<div class="container">
+  <div class="forum-main fl">
+    <div id="topicBody" class="box">
+      <div class="fourm-topic-hd">
+        <h4 class="title">[[ topic.title ]]</h4>
+        <ul class="nols clearfix">
+          <li>发布于 <span class="value">[[ topic.createAt | date: 'yyyy-MM-dd' ]]</span></li>
+          <li>作者 <a class="value" href="/global/u/[[ topic.user._id ]]">[[ topic.user.name.first ]]</a></li>
+          <li>回复 <span class="value">[[ topic.postCount ]]</span></li>
+          <li>浏览 <span class="value">[[ topic.viewCount ]]</span></li>
+        </ul>
+      </div>
+      <div class="forum-topic-bd" ng-bind-html="topic.body | toHtml"></div>
+    </div>
+    <!-- 回复列表 -->
+    <div ng-if="posts.length > 0" id="commentList" class="box mt20">
+      <div class="forum-title">[[ posts.length ]] 个回复</div>
+      <ul class="forum-comment-list nols">
+        <li class="forum-comment-item clearfix" ng-repeat="item in posts">
+          <div class="pic fl">
+            <a href="/global/u/[[ item.user._id ]]" title=""><img class="avatar" ng-src="[[ item.user.avatar ]]" alt=""></a>
+          </div>
+          <div class="info">
+            <div class="">
+              <a class="author" href="" title="">[[ item.user.name.first ]]</a>
+              <span class="time ml10">[[ item.createAt | date: 'yyyy-MM-dd' ]]</span>
+              <span class="sort fr">[[ $index < 3 ? ['沙发', '板凳', '地板'][$index] : $index+1+'楼' ]]</span>
+            </div>
+            <div class="mt5" ng-bind-html="item.body | toHtml"></div>
+          </div>
+        </li>
+      </ul>
+    </div><!-- 回复列表 end -->
+    <!-- 回复表单 -->
+    <div class="box mt20">
+      <div class="forum-title">添加回复[[ loadEditor ]]</div>
+      <div class="p15">
+        <form ng-submit="addPost()">
+          <div style="width: 100%;">
+            <script type="text/plain" id="postContent" style="width: 726px;height:240px;"></script>
+          </div>
+          <div class="tr mt10">
+            <button id="btnAddPostSubmit" type="submit">评 论</button>
+          </div>
+        </form>
+      </div>
+    </div><!-- 回复表单 end -->
+  </div>
+  <div class="forum-side fl">
+    <div ng-include="'/views/forum/includes/forum-right.html'"></div>
+  </div>
+</div>
+<div ng-include="'/views/forum/includes/add-topic-modal.html'"></div>

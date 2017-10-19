@@ -1,0 +1,32 @@
+<div class="my-forum-box">
+  <div class="my-forum-header">
+    <span class="title mr5">我的主题</span>
+    <span class="count active">[[ myTopics.length ]]</span>
+  </div>
+  <div class="my-forum-body">
+    <table class="table">
+      <thead>
+        <tr class="thead-tr">
+          <th align="left">主题名称</th>
+          <th>回复</th>
+          <th>浏览</th>
+          <th class="pr15">时间</th>
+          <!-- <th>操作</th> -->
+        </tr>
+      </thead>
+      <tbody class="tbody">
+        <tr ng-repeat="item in myTopics">
+          <td align="left">
+            <a href="#/topic/[[ item._id  ]]">[[ item.title ]]</a>
+          </td>
+          <td>[[ item.postCount ]]</td>
+          <td>[[ item.viewCount ]]</td>
+          <td class="pr15">[[ item.createAt | date: 'yyyy-MM-dd HH:mm:ss' ]]</td>
+          <!-- <td>
+            <i cancel-star class="iconfont star" data-key="[[ s._id ]]" data-type="myProducts" title="删除">&#xe623;</i>
+          </td> -->
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

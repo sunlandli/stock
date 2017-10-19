@@ -1,0 +1,370 @@
+<!-- 上证指数信息、balabala。。。 -->
+<div class="stock-info-box clearfix">
+  <ul class="stock-info-list fl nols clearfix">
+    <li ng-repeat="item in indexContract" class="stock-info-item">
+      <h4 class="label">[[ item.name ]]</h4>
+      <p class="data" ng-class="{green: item.diff < 0}">[[ item.close ]]</p>
+      <span class="percent" ng-class="{green: item.diff < 0, red: item.diff >= 0}">
+      <i ng-if="item.diff>0">+</i>[[ item.diff ]] / </span>
+      <span class="percent" ng-class="{green: item.change < 0, red: item.change >= 0}">
+      <i ng-if="item.change>0">+</i>[[ item.change ]]%</span>
+    </li>
+  </ul>
+</div> <!-- 上证指数 end -->
+
+<div class="my-stocks-box">
+  <div class="my-stocks-header" ng-init="showTable = 1">
+    <span class="title" ng-class="{active:showTable == 1}" ng-click="showTable = 1; showMyProduct()">我的组合</span>
+    <span class="title" ng-class="{active:showTable == 2}" ng-click="showTable = 2; showMyContract();">自选股票</span>
+    <span class="title" ng-class="{active:showTable == 3}" ng-click="showTable = 3; showFollowProduct();">跟投的组合</span>
+    <div class="tools-box fr">
+        <div ng-show="showTable == 1">
+          <!-- <a class="btn-create" ui-sref="create">创建组合</a> -->
+          <a class="btn-create" href="javascript:" style="background-color: #f66;" ng-click="formA=3;showModal=true;">创建实盘组合</a>
+          <a class="btn-create" href="javascript:" ng-click="formA=1;showModal=true;getAllProduct()">创建模拟组合</a>
+        </div>
+        <div class="search" ng-show="showTable == 2">
+          <angucomplete id="ex1"
+                        placeholder="添加股票"
+                        pause="100"
+                        selectedobject="selectedResult"
+                        localdata="newContract"
+                        callback="addMyContract(r)"
+                        searchfields="code,pinyin"
+                        titlefield="code,name"
+                        minlength="3"
+                        inputclass="input-search form-control-small"
+                        matchclass="isMatch"/>
+        </div>
+    </div>
+  </div>
+  <div class="my-stocks-list">
+    <!-- 我的组合 -->
+    <div class="" ng-show="showTable == 1">
+      <!-- 自创 -->
+      <table class="table">
+        <thead>
+          <tr class="thead-tr">
+            <th>组合名称</th>
+            <th>获利总额</th>
+            <th>总收益率</th>
+            <th>净值</th>
+            <th>回撤率</th>
+            <th>夏普率</th>
+            <th>跟投人数</th>
+            <th>跟投获利</th>
+            <th>交易次数</th>
+            <th>收益曲线</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody class="tbody" ng-show="myproduct.length != 0">
+          <tr ng-repeat="s in myproduct">
+            <td><a ui-sref="rank.detail({id: s.pid})">[[ s.name ]]</a></td>
+            <td ng-class="{green: (s.captial.equity - s.captial.initEquity).toFixed(1) < 0, red: (s.captial.equity - s.captial.initEquity).toFixed(1) > 0}">
+              <i ng-if="(s.captial.equity - s.captial.initEquity).toFixed(1)>0">+</i>[[ (s.captial.equity - s.captial.initEquity).toFixed(1) ]]
+            </td>
+            <td ng-class="{green: ((s.captial.equity - s.captial.initEquity)/s.captial.initEquity*100).toFixed(1) < 0, red: ((s.captial.equity - s.captial.initEquity)/s.captial.initEquity*100).toFixed(1) > 0}">
+              <i ng-if="((s.captial.equity - s.captial.initEquity)/s.captial.initEquity*100).toFixed(1)>0">+</i>[[ ((s.captial.equity - s.captial.initEquity)/s.captial.initEquity*100).toFixed(1) ]]%
+            </td>
+            <td ng-class="{green: (s.captial.equity/s.captial.initEquity).toFixed(1) < 0, red: (s.captial.equity/s.captial.initEquity).toFixed(1) > 0}">
+              [[ (s.captial.equity/s.captial.initEquity).toFixed(3) ]]
+            </td>
+            <td ng-class="{green: s.statics.maxDrawDown.toFixed(1) < 0, red: s.statics.maxDrawDown.toFixed(1) > 0}">
+              <i ng-if="s.statics.maxDrawDown.toFixed(1)>0">+</i>[[ s.statics.maxDrawDown.toFixed(1) ]]%
+            </td>
+            <td ng-class="{green: s.statics.sharpeRatio.toFixed(1) < 0, red: s.statics.sharpeRatio.toFixed(1) > 0}">
+              <i ng-if="s.statics.sharpeRatio.toFixed(1)>0">+</i>[[ s.statics.sharpeRatio.toFixed(1) ]]%
+            </td>
+
+            <td>[[ s.totalFollowersAccount ]]</td>
+            <td ng-class="{green: s.realtimeFollowingProfit.toFixed(1) < 0, red: s.realtimeFollowingProfit.toFixed(1) > 0}">
+              <i ng-if="s.realtimeFollowingProfit.toFixed(1)>0">+</i>[[ s.realtimeFollowingProfit.toFixed(1) ]]
+            </td>
+            <td>[[ s.statics.tradingNum ]]</td>
+            <td><div class="dib" id="[[ s.pid + 'M' + $index ]]" style="width: 74px; height: 50px;"></div></td>
+            <td>
+              <i cancel-star class="iconfont star" data-key="[[ s._id ]]" data-type="myProducts" title="删除">&#xe623;</i>
+            </td>
+          </tr>
+        </tbody>
+      </table> <!-- 自创 end -->
+      <div class="no-data" ng-show="myproduct.length == 0">
+        <div ng-show="loadStatus == 'loaded'" style="position: absolute;top: 50%;left: 0;">
+          <i class="iconfont">&#xe625;</i>
+          <p>暂无组合</p>
+        </div>
+        <div ng-show="loadStatus == 'loading'" style="position: absolute;top: 50%;left: 0;width: 100%; height: 100%;margin-top: -30px;">
+          <div class="loader-inner line-scale-pulse-out-rapid">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+          <div>正在努力加载中</div>
+        </div>
+      </div>
+    </div> <!-- 我的组合 end -->
+
+    <div class="" ng-show="showTable == 2">
+      <table class="table">
+        <thead>
+          <tr class="thead-tr">
+            <th>股票名</th>
+            <th>最新价</th>
+            <th>涨跌幅</th>
+            <th>成交量</th>
+            <th>今低</th>
+            <th>今高</th>
+            <th>今开</th>
+            <th>昨收</th>
+            <th>自选</th>
+          </tr>
+        </thead>
+        <tbody class="tbody" ng-if="mycontracts.length != 0">
+          <!-- 自选组合循环 -->
+          <tr ng-class="{green: p.change < 0, red: p.change > 0}" ng-repeat="p in mycontracts">
+            <td><a ui-sref="room({id: p.key})">[[ p.name ]]</a></td>
+            <td>[[ p.close ]]</td>
+            <td>[[ p.change ]]%</td>
+            <td>[[ p.volume ]]</td>
+            <td>[[ p.low ]]</td>
+            <td>[[ p.high ]]</td>
+            <td>[[ p.open ]]</td>
+            <td>[[ p.preClose ]]</td>
+            <td>
+              <i cancel-star class="iconfont star" data-key="[[ p.key ]]" data-type="mycontracts" title="删除">&#xe623;</i>
+            </td>
+          </tr>
+          <!-- 自选组合循环 end -->
+        </tbody>
+      </table>
+      <div class="no-data" ng-if="mycontracts.length == 0">
+        <i class="iconfont">&#xe625;</i>
+        <p>暂无自选合约</p>
+      </div>
+    </div>
+
+    <!-- 关注的组合 -->
+    <div class="" ng-show="showTable == 3">
+      <table class="table">
+        <thead>
+          <tr class="thead-tr">
+            <th>组合名称</th>
+            <th>获利总额</th>
+            <th>总收益率</th>
+            <th>净值</th>
+            <th>回撤率</th>
+            <th>夏普率</th>
+            <th>跟投人数</th>
+            <th>跟投获利</th>
+            <th>交易次数</th>
+            <th>收益曲线</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody class="tbody" ng-if="products.length != 0">
+          <!-- 自选组合循环 -->
+          <tr ng-repeat="p in followProducts">
+            <td><a ui-sref="rank.detail({id: p.pid})">[[ p.name ]]</a></td>
+            <td ng-class="{green: (p.captial.equity - p.captial.initEquity).toFixed(1) < 0, red: (p.captial.equity - p.captial.initEquity).toFixed(1) > 0}">
+              <i ng-if="(p.captial.equity - p.captial.initEquity).toFixed(1)>0">+</i>[[ (p.captial.equity - p.captial.initEquity).toFixed(1) ]]
+            </td>
+            <td ng-class="{green: ((p.captial.equity - p.captial.initEquity)/p.captial.initEquity*100).toFixed(1) < 0, red: ((p.captial.equity - p.captial.initEquity)/p.captial.initEquity*100).toFixed(1) > 0}">
+              <i ng-if="((p.captial.equity - p.captial.initEquity)/p.captial.initEquity*100).toFixed(1)>0">+</i>[[ ((p.captial.equity - p.captial.initEquity)/p.captial.initEquity*100).toFixed(1) ]]%
+            </td>
+            <td ng-class="{green: (p.captial.equity/p.captial.initEquity).toFixed(1) < 0, red: (p.captial.equity/p.captial.initEquity).toFixed(1) > 0}">
+              [[ (p.captial.equity/p.captial.initEquity).toFixed(3) ]]
+            </td>
+            <td ng-class="{green: p.statics.maxDrawDown.toFixed(1) < 0, red: p.statics.maxDrawDown.toFixed(1) > 0}">
+              <i ng-if="p.statics.maxDrawDown.toFixed(1)>0">+</i>[[ p.statics.maxDrawDown.toFixed(1) ]]%
+            </td>
+            <td ng-class="{green: p.statics.sharpeRatio.toFixed(1) < 0, red: p.statics.sharpeRatio.toFixed(1) > 0}">
+              <i ng-if="p.statics.sharpeRatio.toFixed(1)>0">+</i>[[ p.statics.sharpeRatio.toFixed(1) ]]%
+            </td>
+
+            <td>[[ p.totalFollowersAccount ]]</td>
+            <td ng-class="{green: p.realtimeFollowingProfit.toFixed(1) < 0, red: p.realtimeFollowingProfit.toFixed(1) > 0}">
+              <i ng-if="p.realtimeFollowingProfit.toFixed(1)>0">+</i>[[ p.realtimeFollowingProfit.toFixed(1) ]]
+            </td>
+            <td>[[ p.statics.tradingNum ]]</td>
+            <td><div class="dib" id="[[ p.pid + 'F' + $index ]]" style="width: 74px; height: 50px;"></div></td>
+            <td class="follow-more">
+              <i cancel-star class="cancle-follow" data-key="[[ p._id ]]" data-type="followProducts" title="取消跟投">取消跟投</i>
+            </td>
+          </tr>
+          <tr ng-repeat="p in autoFollowProducts">
+            <td><a ui-sref="detail({id: p.pid})">[[ p.name ]]</a></td>
+            <td ng-class="{green: (p.captial.equity - p.captial.initEquity).toFixed(1) < 0, red: (p.captial.equity - p.captial.initEquity).toFixed(1) > 0}">
+              <i ng-if="(p.captial.equity - p.captial.initEquity).toFixed(1)>0">+</i>[[ (p.captial.equity - p.captial.initEquity).toFixed(1) ]]
+            </td>
+            <td ng-class="{green: ((p.captial.equity - p.captial.initEquity)/p.captial.initEquity*100).toFixed(1) < 0, red: ((p.captial.equity - p.captial.initEquity)/p.captial.initEquity*100).toFixed(1) > 0}">
+              <i ng-if="((p.captial.equity - p.captial.initEquity)/p.captial.initEquity*100).toFixed(1)>0">+</i>[[ ((p.captial.equity - p.captial.initEquity)/p.captial.initEquity*100).toFixed(1) ]]%
+            </td>
+            <td ng-class="{green: (p.captial.equity/p.captial.initEquity).toFixed(1) < 0, red: (p.captial.equity/p.captial.initEquity).toFixed(1) > 0}">
+              [[ (p.captial.equity/p.captial.initEquity).toFixed(3) ]]
+            </td>
+            <td ng-class="{green: p.statics.maxDrawDown.toFixed(1) < 0, red: p.statics.maxDrawDown.toFixed(1) > 0}">
+              <i ng-if="p.statics.maxDrawDown.toFixed(1)>0">+</i>[[ p.statics.maxDrawDown.toFixed(1) ]]%
+            </td>
+            <td ng-class="{green: p.statics.sharpeRatio.toFixed(1) < 0, red: p.statics.sharpeRatio.toFixed(1) > 0}">
+              <i ng-if="p.statics.sharpeRatio.toFixed(1)>0">+</i>[[ p.statics.sharpeRatio.toFixed(1) ]]%
+            </td>
+
+            <td>[[ p.totalFollowersAccount ]]</td>
+            <td ng-class="{green: p.realtimeFollowingProfit.toFixed(1) < 0, red: p.realtimeFollowingProfit.toFixed(1) > 0}">
+              <i ng-if="p.realtimeFollowingProfit.toFixed(1)>0">+</i>[[ p.realtimeFollowingProfit.toFixed(1) ]]
+            </td>
+            <td>[[ p.statics.tradingNum ]]</td>
+            <td><div class="dib" id="[[ p.pid + 'AF' + $index ]]" style="width: 74px; height: 50px;"></div></td>
+            <td class="follow-more">
+              自动跟投
+              <!-- <i cancel-star class="iconfont star" data-key="[[ p._id ]]" data-type="followProducts" title="取消跟投">&#xe623;</i> -->
+              <!-- <button class="iconfont" ng-click="showMore = !showMore;">&#xe629;</button> -->
+              <!-- <i cancel-star class="iconfont star" data-key="[[ p._id ]]" data-type="followProducts">&#xe623;</i> -->
+              <!-- <ul class="nols" ng-show="showMore">
+                <li ng-click="autoFollow(p._id, 1)">手 动</li>
+                <li ng-click="autoFollow(p._id, 2)">自 动</li>
+                <li ng-click="autoFollow(p._id, 4)">离 线</li>
+                <li cancel-star data-key="[[ p._id ]]" data-type="followProducts">取 消</li>
+              </ul> -->
+            </td>
+          </tr>
+          <!-- 自选组合循环 end -->
+        </tbody>
+      </table>
+      <div class="no-data" ng-if="products.length == 0">
+        <i class="iconfont">&#xe625;</i>
+        <p>暂无组合</p>
+        <button type="button">我要创建</button>
+      </div>
+    </div> <!-- 关注的组合 end -->
+  </div>
+</div>
+
+<!-- 对话框 -->
+<div class="modal" ng-show="showModal">
+  <form id="createProductForm" name="createProductForm">
+  <div class="dialog create-product-box" ng-init="formA=1">
+    <div class="dialog-hd">
+      <h4 class="mb0">
+        <span ng-if="formA==1">创建模拟组合</span>
+        <span ng-if="formA==2">添加模拟组合</span>
+        <span ng-if="formA==3">创建实盘组合</span>
+        <i class="iconfont cp fr" ng-click="showModal=false;data.name = ''; data.description = ''; selectedG = [];addG = [];">&#xe623;</i>
+      </h4>
+    </div>
+    <div class="dialog-bd">
+      <div ng-show="formA==1 || formA==3">
+          <div class="form-group mb10">
+            <label for="">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称</label>
+            <input
+              class="input-text"
+              type="text"
+              name="name"
+              ng-model="data.name"
+              required>
+          </div>
+          <!-- <p class="f12" ng-show="createProductForm.name.$dirty && createProductForm.name.$invalid" style="color: #f90;padding-left: 70px;">请勿连续输入空格。</p> -->
+
+          <div class="form-group mb10">
+            <label for="">推荐理由</label>
+            <textarea class="textarea" name="description" ng-model="data.description"
+            required></textarea>
+          </div>
+
+          <div ng-if="formA==3" class="form-group mb10">
+            <label for="">账号</label>
+            <input class="input-text" type="text" name="account" ng-model="data.subProduct.account" required>
+          </div>
+          <div ng-if="formA==3" class="form-group mb10">
+            <label for="">密码</label>
+            <input class="input-text" type="password" name="password" ng-model="data.subProduct.password" required>
+          </div>
+          <div ng-if="formA==3" class="form-group mb10 clearfix">
+            <div class="group-a fl">
+              <label for="" style="width: 45%;">ip</label>
+              <input class="input-text" type="text" name="ip" ng-model="data.subProduct.ip" style="width: 55%;" required>
+            </div>
+            <div class="group-b fr">
+              <label for="" style="width: 45%;">port</label>
+              <input class="input-text" type="text" name="port" ng-model="data.subProduct.port" style="width: 55%;" required>
+            </div>
+          </div>
+          <div ng-if="formA==3" class="form-group mb10">
+            <label for="">brokerId</label>
+            <input class="input-text" type="text" name="brokerId" ng-model="data.subProduct.brokerId" required>
+          </div>
+          <!-- <p class="f12" ng-show="createProductForm.description.$dirty && createProductForm.description.$invalid" style="color: #f90;padding-left: 70px;">请勿连续输入空格。</p> -->
+
+          <div ng-show="formA==1" class="form-group mb10">
+            <label for="">初始资金</label>
+            <input class="input-text" type="text" name="initEquity" ng-init="data.initEquity='1000000'" disabled="disabled" ng-model="data.initEquity"required>
+          </div>
+          <div ng-show="formA==1" class="form-group mb10 clearfix">
+            <div class="group-a fl">
+              <label for="" style="width: 45%;">股票佣金</label>
+              <input class="input-text" type="text" name="initEquity" ng-init="data.sCommission='0.03%'" disabled="disabled" ng-model="data.sCommission" style="width: 55%;">
+            </div>
+            <div class="group-b fr">
+              <label for="" style="width: 45%;">期货佣金</label>
+              <input class="input-text" type="text" name="initEquity" ng-init="data.fCommission='0.01%'" disabled="disabled" ng-model="data.fCommission" style="width: 55%;">
+            </div>
+          </div>
+          <div ng-show="formA==1" class="form-group mb10">
+            <label for="">添加组合</label>
+            <button class="f12" type="button" ng-click="formA=2;">组合跟投</button>
+          </div>
+          <div ng-show="formA==1" class="form-group" style="padding-left: 20%;">
+            <table class="f12 tc" style="width: 100%;border-color: #eee;">
+              <thead>
+                <tr>
+                  <th style="width: 50%;">组合名称</th>
+                  <th style="width: 50%;">资金占比</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="item in addG">
+                  <td ng-init="data.child[$index].id = item._id">[[ item.name ]]</td>
+                  <td>
+                    <input
+                      type="number"
+                      name="num[[ $index ]]"
+                      ng-max="100"
+                      ng-min="1"
+                      ng-model="data.child[$index].v"
+                      required> %
+                    <p ng-show="createProductForm.num[[$index]].$error.min || createProductForm.num[[$index]].$error.max" style="color: #f90;">输入的数超出比例范围</p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+      </div>
+      <div ng-show="formA==2">
+        <div class="home-add-group clearfix">
+          <div class="home-add-all fl" style="width: 48%; height: 300px;overflow-y: auto;">
+            <ul class="nols" style="width: 100%;">
+              <li ng-repeat="item in allGroup" ng-click="selectGroup(item, $index)">[[ item.name ]]</li>
+            </ul>
+          </div>
+          <div class="home-add-all fl" style="width: 52%;padding-left:4%;">
+            <ul class="nols" style="width: 100%; height: 300px;overflow-y: auto;">
+              <li ng-repeat="item in selectedG" ng-click="removeGroup(item, $index)">[[ item.name ]]</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-ft tc">
+      <button class="btn-create" type="button" ng-click="createProduct(data)" form="createProductForm" ng-show="formA==1">创建组合</button>
+      <button class="btn-create" type="button" ng-click="createRealProduct(data)" form="createProductForm" ng-show="formA==3">创建组合</button>
+      <div ng-show="formA==2">
+        <button class="btn-create" type="button" ng-click="addGroup(); formA=1;">添加组合</button>
+        <span class="ml20 cp" ng-click="formA=1">返回</span>
+      </div>
+    </div>
+  </div>
+  </form>
+</div><!-- 对话框 end

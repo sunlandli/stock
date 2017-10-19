@@ -1,0 +1,34 @@
+<div class="container">
+  <!-- 左栏 -->
+  <div class="sidebar">
+    <div class="uu-profile">
+      <img class="avatar" ng-src="[[ userInfo.avatar ]]" alt="">
+      <h3 class="name mt10 mb20">[[ userInfo.name.first ]]</h3>
+      <ul class="nols clearfix tc">
+        <li class="btn-follow dib" ng-show="!isFollow" ng-click="addFollow()">关注</li>
+        <li class="btn-follow dib" ng-show="isFollow" ng-click="addFollow()" style="background-color: #ccc;">取消关注</li>
+        <!-- <li class="btn-share fr">分享</li> -->
+      </ul>
+    </div>
+    <div class="uu-tab">
+      <ul class="nols" ng-init="showA=1">
+        <li ng-class="{active: showA==1}" ng-click="getUserProduct('product');showA=1">他的产品</li>
+        <li ng-class="{active: showA==2}" ng-click="getUserProduct('follow');showA=2">他的跟投</li>
+      </ul>
+    </div>
+  </div> <!-- 左栏 end -->
+
+  <!-- 右栏 -->
+  <div class="main">
+    <div class="box box-rank-info">
+
+      <div is-loaded id="rankBoxA">
+        <table id="userProductTable" data-page="userProductTotal"></table>
+        <div style="text-align:right;">
+          <div id="userProductTotal"></div>
+        </div>
+      </div>
+
+    </div>
+  </div> <!-- 右栏 end -->
+</div>

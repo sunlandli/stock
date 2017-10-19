@@ -1,0 +1,222 @@
+<!-- banner -->
+<div my-swiper class="index-banner">
+  <div class="swiper-container">
+    <div class="swiper-wrapper">
+      <div class="swiper-slide" style="background-image:url(/images/index-bg-07.jpg);">
+        <div class="content" style="margin-top: -125px;">
+          <h1 class="title" data-swiper-parallax="-100">和你一起寻找投资达人</h1>
+          <h4 class="title f18 fn" data-swiper-parallax="-500">业绩评判客观专业，海量高手任你选</h4>
+          <h4 class="title f18 fn" data-swiper-parallax="-1500">投资只需一键跟投</h4>
+          <h4 class="title f18 fn" data-swiper-parallax="-3000">组合跟投，分散风险</h4>
+          <h4 class="title f18 fn" data-swiper-parallax="-4000">社交互动，以高手为师</h4>
+          <div class="info mt30">
+            <!-- <p class="blurb" data-swiper-parallax="-1000">三平台数据同步，用户可以在Web、Ios、Android设备上同步使用，随时随地进行交易、学习互动、查看资讯等一系列操作。 <br>让投资更简单，让交易更有趣。</p> -->
+            <!-- <img class="pic fr" src="/images/banner01.jpg" alt="" data-swiper-parallax="-1500"> -->
+          </div>
+        </div>
+      </div>
+      <div class="swiper-slide" style="background-image:url(/images/index-bg-03.jpg);">
+        <div class="content">
+          <h1 class="title" data-swiper-parallax="-500">业绩评判客观专业，海量高手任你选</h1>
+          <div class="info mt30">
+            <p class="blurb" data-swiper-parallax="-1000">完全基于数据进行评判，采用主流的绩效指标，收益风险一目了然。价值、技术和量化，各路高手云集于此，总有一款适合你。</p>
+            <img class="pic fr" src="/images/banner02.jpg" alt="" data-swiper-parallax="-1500">
+          </div>
+        </div>
+      </div>
+      <div class="swiper-slide" style="background-image:url(/images/index-bg-03.jpg);">
+        <div class="content">
+          <h1 class="title" data-swiper-parallax="-500">投资只需一键跟投</h1>
+          <div class="info mt30">
+            <p class="blurb" data-swiper-parallax="-1000">闲时，可选择跟踪交易信号，结合自主判断进行手工下单。忙时，可选择组合跟投自动交易，无需盯盘无需开机也可赚钱。</p>
+            <img class="pic fr" src="/images/banner03.jpg" alt="" data-swiper-parallax="-1500">
+          </div>
+        </div>
+      </div>
+      <div class="swiper-slide" style="background-image:url(/images/index-bg-03.jpg);">
+        <div class="content">
+          <h1 class="title" data-swiper-parallax="-500">组合跟投，分散风险</h1>
+          <div class="info mt30">
+            <p class="blurb" data-swiper-parallax="-1000">通过跟投多个投资风格不同优势互补的组合，能有效降低风险，让收益更稳定。</p>
+            <img class="pic fr" src="/images/banner01.jpg" alt="" data-swiper-parallax="-1500">
+          </div>
+        </div>
+      </div>
+      <div class="swiper-slide" style="background-image:url(/images/index-bg-03.jpg);">
+        <div class="content">
+          <h1 class="title" data-swiper-parallax="-500">社交互动，以高手为师</h1>
+          <div class="info mt30">
+            <p class="blurb" data-swiper-parallax="-1000">可查看高手的交易明细，也可阅读高手的投资文章，还可和他互动交流。</p>
+            <img class="pic fr" src="/images/banner04.jpg" alt="" data-swiper-parallax="-1500">
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Add Pagination -->
+    <div class="swiper-pagination swiper-pagination-white"></div>
+    <!-- Add Arrows -->
+    <div class="swiper-button-next swiper-button-white"></div>
+    <div class="swiper-button-prev swiper-button-white"></div>
+    <!-- navbar -->
+  </div>
+</div> <!-- banner end -->
+
+<!-- <div style="position: absolute;z-index: 1280;top: 100%; width: 100%;background-color: #fff;"> -->
+  <!-- 实时交易额 -->
+  <div class="current-status">
+    <div class="container">
+      <ul class="nols clearfix">
+        <li class="fl">跟投获利总额：<b id="profitCount" class="profit-count"></b></li>
+        <li class="fr">交易总额：<b id="tradeCount" class="trade-count"></b></li>
+      </ul>
+    </div>
+  </div> <!-- 实时交易额 end -->
+
+  <div class="index-wrap clearfix">
+    <div class="container">
+        <div class="main-left">
+            <div class="hot-group">
+                <div class="index-header clearfix">
+                    <h4 class="title fl">最赚钱跟投组合</h4>
+                    <!--<a class="more fr" href="/sp/all">组合精选</a>-->
+                </div>
+                <div class="hot-body">
+                    <ul id="indexProductRank" class="list nols clearfix">
+                        <!--存放GET下来的产品列表-->
+                          <li class="item" is-loaded ng-repeat="item in productsRankA">
+                            <dl class="clearfix">
+                              <dt class="news fl">
+                                <div id="[[ item.pid ]]" style="width: 100%; height: 100%;"></div>
+                                <a class="mask" ui-sref="rank.detail({id: item.pid})">
+                                  [[ item.totalEquity.toFixed(2) ]]%<br>总收益
+                                </a>
+                              </dt>
+                              <dd class="fl">
+                                <h4 class="title">
+                                  <a ui-sref="rank.detail({id: item.pid})">[[ item.name ]]</a>
+                                  <q class="summary">[[ item.description ]]</q>
+                                </h4>
+                                <div class="data-list">
+                                  <table>
+                                    <tbody>
+                                      <tr>
+                                        <td>
+                                          <span class="label">跟投人数：</span>
+                                          <span class="value">[[ item.totalFollowersAccount ]]</span>
+                                        </td>
+                                        <td>
+                                          <span class="label">跟投获利：</span>
+                                          <span class="value">[[ item.realtimeFollowingProfit.toFixed(2) ]]</span>
+                                        </td>
+                                        <td>
+                                          <span class="label">日收益率：</span>
+                                          <span class="value">[[ item.dayEquity.toFixed(2) ]]%</span>
+                                        </td>
+                                      </tr>
+                                      <tr>
+                                        <td>
+                                          <span class="label">净&nbsp;&nbsp;&nbsp;值：</span>
+                                          <span class="value">[[ (item.captial.equity/item.captial.initEquity).toFixed(2) ]]</span>
+                                        </td>
+                                        <td>
+                                          <span class="label">回撤率：</span>
+                                          <span class="value">[[ item.statics.maxDrawDown.toFixed(2) ]]%</span>
+                                        </td>
+                                        <td>
+                                          <span class="label">夏普率：</span>
+                                          <span class="value">[[ item.statics.sharpeRatio.toFixed(2) ]]%</span>
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
+                                <div class="info">
+                                  <span class="author">
+                                    <a class="name" ui-sref="user({id: item.creator._id})">
+                                      <img class="avatar" ng-src="[[ item.creator.avatar ]]" alt="">
+                                      <b style="vertical-align: middle;">[[ item.creator.name.first ]]</b>
+                                    </a> 主理
+                                  </span>
+                                    <span class="fr">[[ item.created | date: 'yyyy-MM-dd' ]] 创建</span>
+                                    <!--<a class="tag fr hide" href="#@">tag</a>-->
+                                </div>
+                              </dd>
+                            </dl>
+                          </li>
+                    </ul>
+                </div>
+                <div class="hot-footer">
+                    <a ui-sref="rank">更多组合</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-right">
+            <div class="sort-group">
+                <div class="index-header clearfix">
+                    <h4 class="fl">跟投获利排行</h4>
+                    <a class="fr" href="#@">Top10</a>
+                </div>
+                <div class="group-body">
+                    <!--<ul class="switch-tab nols clearfix">
+                      <li class="getProductRank active" data-type="day">日收益榜</li>
+                      <li class="getProductRank" data-type="week">周收益榜</li>
+                      <li class="getProductRank" data-type="month">月收益榜</li>
+                    </ul>-->
+
+                    <!--<ul class="switch-query nols clearfix">
+                        <li class="active">日收益</li>
+                        <li>月收益</li>
+                        <li>总收益</li>
+                    </ul>-->
+
+                    <ol id="userRankList" class="user-list nols">
+                        <li class="clearfix lh200" ng-repeat="item in userRankList">
+                          <div class="fl pic">
+                            <a ui-sref="user({id: item._id})" title="">
+                              <img class="avatar" ng-src="[[ item.avatar ]]" alt="">
+                            </a>
+                          </div>
+                          <div class="fl author">
+                            <p><b class="sort-label">No.[[ $index+1 ]]</b><a ui-sref="user({id: item._id})" title="">[[ item.name.first ]]</a></p>
+                            <!--<p><span class="label">收益率：</span><span class="value">178.64%</span></p>-->
+                          </div>
+                          <div class="fr tr other">
+                            <p><!--<span class="label">跟单获利：</span>--><span class="value">&yen;[[ item.trading.realtimeFollowingProfit.toFixed(2) ]]</span></p>
+                            <!--<p><span class="label">跟随人数：</span><span class="value">35</span></p>-->
+                          </div>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="sort-group">
+                <div class="index-header clearfix">
+                    <h4 class="fl">最多跟投排行</h4>
+                    <a class="fr" href="#@">Top10</a>
+                </div>
+                <div class="group-body">
+                    <!--<ul class="switch-tab nols clearfix">
+                      <li class="getProductRank active" data-type="day">日收益榜</li>
+                      <li class="getProductRank" data-type="week">周收益榜</li>
+                      <li class="getProductRank" data-type="month">月收益榜</li>
+                    </ul>-->
+
+                    <!--<ul class="switch-query nols clearfix">
+                        <li class="active">日收益</li>
+                        <li>月收益</li>
+                        <li>总收益</li>
+                    </ul>-->
+
+                    <ol id="productRankA" class="detail-list nols productRankList">
+                      <li ng-repeat="item in productsRankB">
+                        <span>[[ $index+1 ]]</span>
+                        <a ui-sref="rank.detail({id: item.pid})">[[ item.name ]]</a> <b>[[ item.totalFollowersAccount ]]人</b>
+                      </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+<!-- </div> -->

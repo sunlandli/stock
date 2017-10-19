@@ -1,0 +1,70 @@
+<div class="container">
+  <div ng-show="isDone" class="join">
+    <div class="j-header clearfix">
+      <div class="pull-left">
+        <h2>激活邮箱</h2>
+        <p>注册成功，立即前往激活邮箱</p>
+      </div>
+    </div>
+    <div class="j-body">
+      <a class="db tc p10 mb20" href="//[[ url ]]" title="激活邮箱" target="_blank" style="background: #6cf;color: #fff;">点此登陆邮箱</a>
+    </div>
+    <div class="j-footer">
+      <span>
+        已有账号？
+        <a ui-sref="login">立即登录</a>
+      </span>
+    </div>
+  </div>
+
+  <div ng-show="!isDone" class="join">
+    <div class="j-header clearfix">
+      <div class="pull-left">
+        <h2>注 册</h2>
+        <p>和你一起寻找投资达人</p>
+      </div>
+    </div>
+    <div class="j-body">
+      <p class="username-tip tc mb20" ng-show="message" style="color:red;">[[ message ]]</p>
+      <form ng-submit="join(formData)">
+        <div class="form-group">
+          <input class="form-control username" name="username" type="text" ng-model="formData.username" placeholder="昵称" required />
+          <span class="username-ok" style="color:green;display:none"></span>
+          <span class="username-no" style="color:red;display:none"></span>
+          <span class="username-tip" style="color:red;display:none">输入长度在1-12之间(包含中文、字母、数字、下划线)。</span>
+        </div>
+        <div class="form-group">
+          <input class="form-control user-email" name="email" type="email" ng-model="formData.email" placeholder="邮箱" required />
+          <span class="email-ok" style="color:green;display:none"></span>
+          <span class="email-no" style="color:red;display:none"></span>
+          <span class="email-tip" style="color:red;display:none">格式错误</span>
+        </div>
+        <div class="form-group">
+          <input class="form-control new-password" name="password" type="password" ng-model="formData.password" placeholder="密码（6~18位）" required />
+          <span class="new-password-tip" style="display:none;color: #f90;">输入长度在6-18之间(包含字母,数字,下划线)。</span>
+        </div>
+        <div class="form-group">
+          <input class="form-control confirm-password" name="confirmPassword" type="password" ng-model="formData.confirmPassword" placeholder="确认密码" required />
+          <span class="confirm-password-tip" style="display:none;color: #f90;">输入的密码不一致，请重试。</span>
+        </div>
+        <div class="form-group checkbox">
+          <label class="checkbox-inline">
+            <input type="checkbox" name="agree" checked />
+            我同意并愿意遵守小跟班
+            <a href="/other/protocol" style="color:#43dbf8;">用户协议</a>
+          </label>
+        </div>
+        <div class="form-group">
+          <button type="submit">立即注册</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="j-footer">
+      <span>
+        已有账号？
+        <a ui-sref="login">立即登录</a>
+      </span>
+    </div>
+  </div>
+</div>

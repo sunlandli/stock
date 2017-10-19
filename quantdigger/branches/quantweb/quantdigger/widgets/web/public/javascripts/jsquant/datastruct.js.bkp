@@ -1,0 +1,1358 @@
+// Copyright 2015 QuantFans Inc. All Rights Reserved.
+/**
+ * @fileoverview 前端交易模块使用到的数据结构。
+ *
+ * @author wondereamer(dingjie.wang@foxmail.com)
+ */
+
+var specialTime = {};   //　定义的特殊时间段
+initSpecialTime();
+
+function getTimeRange(beg, end) {
+	var date = new Date();
+	var obj = {};
+	var args = beg.split(':');
+	obj.begin_time = date.setHours(parseInt(args[0]), parseInt(args[1]), parseInt(args[2]), 0) - date.setHours(0,0,0,0);
+	args = end.split(':');
+	obj.end_time = date.setHours(parseInt(args[0]), parseInt(args[1]), parseInt(args[2]), 0) - date.setHours(0,0,0,0);
+	return obj;
+}
+
+function getSpecialStartTime(period, utime) {
+	var times = getSpecialTimes(period);
+	if(!times || !times.length) {
+		console.log('error times: ' + times);
+		return 0;
+	}
+	var date = new Date(utime);
+	var ut = date.getTime() - date.setHours(0,0,0,0);
+	var one_second = 1000;
+	for (var i = 0; i < times.length; ++i) {
+		if (times[i].begin_time<= ut && ut <= times[i].end_time) {
+			if (i < times.length - 1) {
+				return date.setHours(0,0,0,0) + times[i].end_time + one_second;
+			} else {
+				// 最后一个时段
+				return date.setHours(15,0,0,0);
+			}
+		}
+	}
+	return 0;	   // 非特殊时段
+}
+
+function getSpecialTimes(period) {
+	switch(period) {
+	case '1.Minute':
+		return specialTime._1min;
+	case '3.Minute':
+		return specialTime._3min;
+	case '5.Minute':
+		return specialTime._5min;
+	case '10.Minute':
+		return specialTime._10min;
+	case '15.Minute':
+		return specialTime._15min;
+	case '30.Minute':
+		return specialTime._30min;
+	case '60.Minute':
+		return specialTime._60min;
+	default :
+		console.log('[isSpecialTime] error period: ' + period);
+		return undefined;
+	}
+}
+function initSpecialTime() {
+	// 1.Minute  9:25:00 - 9:29:59   14:59:00 -15:00:59
+	specialTime._1min = []; 
+  // 每个特殊时间段内的数据都归位一个周期，
+  // 比如说 9:25:00 - 9:29:59 间的数据为一个周期内的。
+	specialTime._1min.push(getTimeRange('9:25:00', '9:29:59'));
+	specialTime._1min.push(getTimeRange('14:59:00', '15:00:59'));
+
+	// 3.Minute  9:25:00 - 9:32:59   14:57:00-15:00:59
+	specialTime._3min = [];
+	specialTime._3min.push(getTimeRange('9:25:00', '9:32:59'));
+	specialTime._3min.push(getTimeRange('14:57:00', '15:00:59'));
+
+	// 5.Minute  9:25:00 - 9:34:59   14:55:00-15:00:59
+	specialTime._5min = [];
+	specialTime._5min.push(getTimeRange('9:25:00', '9:34:59'));
+	specialTime._5min.push(getTimeRange('14:55:00', '15:00:59'));
+
+	// 10Minute 9:25:00 - 9:39:59   14:50:00-15:00:59
+	specialTime._10min = [];
+	specialTime._10min.push(getTimeRange('9:25:00', '9:39:59'));
+	specialTime._10min.push(getTimeRange('14:50:00', '15:00:59'));
+
+	// 15Minute 9:25:00 - 9:44:59   14:45:00-15:00:59
+	specialTime._15min = [];
+	specialTime._15min.push(getTimeRange('9:25:00', '9:44:59'));
+	specialTime._15min.push(getTimeRange('14:45:00', '15:00:59'));
+
+	// 30Minute 9:25:00 - 9:59:59   14:30:00-15:00:59
+	specialTime._30min = [];
+	specialTime._30min.push(getTimeRange('9:25:00', '9:59:59'));
+	specialTime._30min.push(getTimeRange('14:30:00', '15:00:59'));
+
+	// 60Minute 9:25:00 - 10:29:59  10:30:00-11:29:59  13:00:00-13:59:59  14:00:00-15:00:59
+	specialTime._60min = [];
+	specialTime._60min.push(getTimeRange('9:25:00', '10:29:59'));
+	specialTime._60min.push(getTimeRange('10:30:00', '11:29:59'));
+	specialTime._60min.push(getTimeRange('13:00:00', '13:59:59'));
+	specialTime._60min.push(getTimeRange('14:00:00', '15:00:59'));
+	// console.log(specialTime);
+}
+
+// 在是否是同一周期判断时，用来决定是否是“特殊”的同一周期。
+var isInSpecialTime = function (period, ta, tb) {
+	var times = getSpecialTimes(period);
+	if(!times || !times.length) {
+		console.log('error times: ' + times);
+		return false;
+	}
+	var flag = false;
+	var date_a = new Date(ta);
+	var uta = date_a.getTime() - date_a.setHours(0,0,0,0);
+	var date_b = new Date(tb);
+	var utb = date_b.getTime() - date_b.setHours(0,0,0,0);
+
+	times.forEach(function(e){
+		flag |= (e.begin_time<= uta && uta <= e.end_time) &&(e.begin_time<= utb && utb <= e.end_time);
+	});
+	return flag;
+}
+
+var TradeSide = (function TradeSide() {
+  function TradeSide() {
+
+  }
+  TradeSide.BUY = 1;
+  TradeSide.SHORT = 2;
+  TradeSide.COVER = 3;
+  TradeSide.SELL = 4;
+  TradeSide.COVERTODAY = 5;
+  TradeSide.SELLTODAY = 6;
+  TradeSide.KAI = 7;
+  TradeSide.PING = 8;
+  TradeSide.prototype = {
+    constructor: TradeSide,
+  };
+
+  return TradeSide;
+})();
+
+var HintContract = (function HintContract() {
+
+  function HintContract() {
+  }
+
+  HintContract.prototype = {
+
+    constructor: HintContract,
+
+  };
+
+  return HintContract;
+})();
+
+var Contract = (function Contract() {
+
+  function Contract() {
+
+    this.isStock = false;
+    this.key = '';
+    this.name = '';
+    this.code = '';
+    this.exchangeId = '';
+    this.open = 0;
+    this.close = 0;
+    this.high = 0;
+    this.low = 0;
+    this.vol = 0;
+    this.last = 0;
+
+    this.industry = '';
+    this.concept = '';
+    this.area = '';
+    this.pinyin = '';
+
+    this.long_margin_ratio = '';
+    this.short_margin_ratio = '';
+    this.price_tick = '';
+    this.volume_multiple = '';
+  }
+
+  Contract.prototype = {
+
+    constructor: Contract,
+
+
+  };
+
+  Contract.isStock = function (name) {
+    return true;
+  };
+
+  Contract.marginRatio = function (name) {
+    return 1;
+  };
+
+  Contract.multiplier = function (name) {
+    return 1;
+  }
+
+  Contract.commissionRatio = function (name) {
+    return 0.0;
+  }
+
+  return Contract;
+})();
+
+var Captial = (function Captial() {
+
+  function Captial(account) {
+    this.equity = 1000000;
+    this.initEquity = 1000000;
+    this.cash = 1000000;
+    this.positionProfit = 0;
+    this.closeProfit = 0;  // 累积平仓盈亏
+    this.margin = 0;   // 保证金占用
+    this.account = account;
+    this.tradingDay = new Date();  // 每天重置
+  }
+
+  Captial.prototype = {
+    constructor: Captial,
+    margin: function (newPrice) {
+      var name = this.contract + "." + this.exchangeId;
+      return newPrice * this.quantity * Contract.marginRatio(name)
+    },
+  };
+
+  return Captial;
+})();
+
+var PriceType = (function PriceType() {
+  function PriceType() {
+
+  }
+  PriceType.LMT = 0;
+  PriceType.MKT = 1;
+  PriceType.prototype = {
+    constructor: PriceType,
+  };
+  return PriceType;
+})();
+
+var Direction = (function Direction() {
+
+  function Direction() {
+
+  }
+
+  Direction.LONG = 0;
+  Direction.SHORT = 1;
+
+  Direction.prototype = {
+    constructor: Direction,
+  };
+
+  return Direction;
+})();
+
+var HedgeType = (function HedgeType() {
+    function HedgeType() {
+
+    }
+
+    HedgeType.Speculation = 0;
+    HedgeType.Arbitrage = 1;
+    HedgeType.Hedge = 2;
+
+    HedgeType.prototype = {
+        constructor: HedgeType,
+    };
+
+    return HedgeType;
+})();
+
+var Order = (function Order() {
+  function Order(exchangeId, contract) {
+    if (!exchangeId || !contract) {
+      throw "未给出参数";
+    };
+    this.id = Order.OrderNo();
+    this.contract = contract;
+    this.exchangeId = exchangeId;
+    this.account = "empty account";
+    this.datetime = Date.now;
+    this.side = TradeSide.KAI;
+    this.priceType = PriceType.MKT;
+    this.direction = Direction.LONG;
+    this.hedgeType = HedgeType.Speculation;
+    this.price = 1000;
+    this.quantity = 1;
+    this.canceled = false;
+    this.refId = 1;
+    this.fquantity = 0;
+
+    this.name = this.contract + '.' + this.exchangeId;
+    this.marginRatio = Contract.marginRatio(this.name);
+    this.multiplier = Contract.multiplier(this.name);
+    this.commissionRatio = Contract.commissionRatio(this.name);
+  }
+
+  Order.prototype = {
+    constructor: Order,
+    toString: function () {
+      return util.format("<Order> id: %d", this.id);
+    },
+
+    /** 实时保证金计算 */
+    calcuMargin: function (newPrice) {
+      // 最新价 ＊ 手数 ＊ 保证金比例 ＊合约乘数
+      return newPrice * (this.quantity-this.fquantity) * this.marginRatio * this.multiplier(this.name);
+    },
+
+  };
+
+
+  Order.initNo = 0;
+  Order.OrderNo = function () {
+    return Order.initNo++;
+  }
+
+  return Order;
+})();
+
+var Transaction = (function Transaction() {
+  function Transaction(order) {
+    this.id = Transaction.TransactionNo();
+    this.orderId = order.id;
+    this.refId = order.refId;
+    this.contract = order.contract;
+    this.exchangeId = order.exchangeId;
+    this.account = order.account;
+    this.datetime = Date.now;
+    this.side = order.side;
+    this.priceType = order.priceType;
+    this.direction = order.direction;
+    this.hedgeType = order.hedgeType;
+    this.price = order.price;
+    this.quantity = order.quantity;
+
+    this.name = this.contract + '.' + this.exchangeId;
+    this.marginRatio = Contract.marginRatio(this.name);
+    this.multiplier = Contract.multiplier(this.name);
+    this.commissionRatio = Contract.commissionRatio(this.name);
+  }
+
+  Transaction.prototype = {
+    constructor: Transaction,
+    toString: function () {
+      return util.format("<Transaction> id: %d", this.id);
+    },
+    get name() { return this.contract + '.' + this.exchangeId; }
+  };
+
+  Transaction.initNo = 0;
+  Transaction.TransactionNo = function () {
+    return Transaction.initNo++;
+  }
+
+  return Transaction;
+})();
+
+var AccountInfo = (function AccountInfo() {
+  // 来自数据库中多张表的集合。
+  function AccountInfo(account) {
+    this.account = account;
+    this.positions = new Array();  // 当前持仓
+    this.captial = new Captial(account);          // 当前资金
+    this.orders = new Array();     // 当日委托, 包括报单和撤销, key为编号。(每天重置)
+    this.transactions = new Array(); // 当日已成交单, key为编号。  (每天重置)
+  }
+
+  AccountInfo.prototype = {
+
+    constructor: AccountInfo,
+
+  };
+
+  return AccountInfo;
+})();
+
+var Position = (function Position() {
+
+  function Position(exchangeId, contract) {
+    if (!exchangeId || !contract) {
+      throw "未给出参数";
+    };
+    this.exchangeId = exchangeId;
+    this.contract = contract;
+    this.cost = 0;
+    this.direction = null;
+    this.positionProfit = 0;
+    this.preMargin = 0;   // 昨日保证金占用
+    this.margin = 0;
+    this.quantity = 0;
+    this.commision = 0;
+    this.todayQuantity = 0;   /// @todo 必须每天重置
+
+    this.name = this.contract + '.' + this.exchangeId;
+    this.marginRatio = Contract.marginRatio(this.name);
+    this.multiplier = Contract.multiplier(this.name);
+    this.commissionRatio = Contract.commissionRatio(this.name);
+  }
+
+  Position.prototype = {
+    constructor: Position,
+
+    /** 实时保证金计算 */
+    calcuMargin: function (newPrice) {
+      // 最新价 ＊ 手数 ＊ 保证金比例 ＊合约乘数
+      return newPrice * this.quantity * this.marginRatio * this.multiplier;
+    },
+
+    /** 持仓盈亏 */
+    calcuPositionProfit: function (newPrice) {
+      var factor = (this.direction == Direction.LONG ? 1 : -1);
+      return (newPrice - this.cost) * factor * this.quantity * this.multiplier;
+    },
+
+    /** 平仓盈亏  */
+    calcuCloseProfit: function (trans) {
+      var factor = (this.direction == Direction.LONG ? 1 : -1);
+      // (当前价格－成本价 - 佣金) * 手数 * 合约乘数
+      return ((trans.price-this.cost)*factor - this.commissionRatio*trans.price) * trans.quantity * this.multiplier;
+    },
+
+  }
+
+  return Position;
+})();
+
+// --------------------------------------------------------------------------------
+var ONE_MINUTE = 60 * 1000;
+var TickData = (function TickData() {
+
+  function TickData(loc) {
+    /// @todo level数据和level撮合
+    this.contract = "";
+    this.exchangeId = "";
+    this.price = 0;
+    this.datetime = 0;
+    this.millisec = 0;
+    this.volume = 0;
+    this._location = loc;
+    this.key = "";
+  }
+
+  TickData.prototype = {
+    constructor: TickData,
+    get name() { return this.contract + '.' + this.exchangeId; },
+    toString : function () {
+      return util.format("contract: %s\nexchangId: %s\nprice: %f\n",
+        this.contract,
+        this.exchangeId,
+        this.price);
+    },
+
+    update: function (tick) {
+      this.datetime = tick.datetime;
+      this.exchangeId = tick.exchangeId;
+      this.time = tick.time;
+      this.contract = tick.contract;
+      this.open = tick.open;
+      this.price = tick.price;
+      this.close = tick.close;
+      this.high = tick.high;
+      this.low = tick.low;
+      this.volume = tick.volume;
+      this.preClose = tick.preClose;
+      this.key = tick.key;
+      this.buy = tick.buy;
+      this.sell = tick.sell;
+      this.totalPrice = tick.totalPrice;
+    },
+
+    onTick: function (tick) {
+      this.update(tick);
+      for (var i = 0; i < this._observers.length; i++) {
+        var observer = this._observers[i];
+        if (this._visible(observer)) {
+          observer.onTick(this);
+        };
+      };
+    },
+
+    _visible: function (obs) {
+      return this._location.$$path == obs.path;
+    },
+
+    addObserver: function (obs) {
+      obs.path = this._location.$$path;
+      this._observers = [];  // todo 此是临时方案。
+      this._observers.push(obs);
+    },
+
+    removeObserver: function (obs) {
+      /*this._observers.splice()*/
+      // 删除， 如果数量为0，则退订。
+
+    },
+
+    notifyTickReady: function () {
+
+    },
+
+  };
+
+  return TickData;
+})();
+
+
+var BarsBuffer = (function BarsBuffer() {
+  function BarsBuffer() {
+    this.time = [];
+    this.price = [];        // k线数据
+    this.realTimeData = null;  // 分时数据
+    this.volume = [];
+    this.alignedTime = null;
+  }
+
+
+  BarsBuffer.prototype = {
+    constructor: BarsBuffer,
+
+    fromArraySource: function (time, open, close, high, low, vol) {
+      this.time = time;
+      this.volume = vol;
+      for (var i = 0; i < time.length; i++) {
+        this.price.push([
+          parseFloat(open[i]).toFixed(2),
+          parseFloat(close[i]).toFixed(2),
+          parseFloat(low[i]).toFixed(2),
+          parseFloat(high[i]).toFixed(2),
+          ]);
+      };
+    },
+
+
+
+    addItem: function (time, open, close, high, low, vol, shiftFirst) {
+      // realTimeData 和分钟没有公用数据。
+      /// @todo realTimeData重复了
+      this.time.push(time);
+      this.volume.push(vol);
+      this.price.push([open, close, low, high]);
+      if (shiftFirst) {
+        this.volume.shift();
+        this.time.shift();
+        this.price.shift();
+      };
+      if (this.realTimeData) {
+        this.realTimeData.push(close);
+        if (shiftFirst) {
+          /// @todo ...
+          console.log("shiftFirst..." );
+         this.realTimeData.shift();
+        };
+      };
+    },
+
+    updateLastItem: function (time, close, high, low, vol) {
+      var end = this.length - 1;
+      this.time[end] = time;
+      this.price[end][1] = close;
+      this.price[end][2] = this.price[end][2] > high ? this.price[end][2] : high;
+      this.price[end][3] = this.price[end][3] < low ? this.price[end][3] : low;
+      this.volume[end] += vol;
+      if (this.realTimeData) {
+        this.realTimeData[end] = (close);
+      };
+    },
+
+    updateLastAlignedTime: function (time) {
+      var end = this.length - 1;
+      this.time[end] = time;
+    },
+
+    getFirstItem: function () {
+      return {
+        time: moment(this.time[0]).format("YYYY-MM-DD HH:mm:ss"),
+        open: this.price[0][0],
+        close: this.price[0][1],
+        low: this.price[0][2],
+        high: this.price[0][3],
+        volume: this.volume[0]
+      };
+    },
+
+    info: function () {
+      var a = [];
+      for (var i = 0; i < this.length; i++) {
+        console.log(this.time[i]);
+        console.log(moment(this.time[i]).format("DD-MM-YYYY HH:mm:ss"));
+        a.push(moment(this.time[i]).format("DD-MM-YYYY HH:mm:ss"));
+      };
+      return {
+        begin: moment(this.beginTime).format("YYYY-MM-DD HH:mm:ss"),
+          end: moment(this.endTime).format("YYYY-MM-DD HH:mm:ss"),
+          length: this.length,
+          times: a
+      };
+    },
+
+    // 分时数据
+    getRealTimeData: function () {
+      if (this.realTimeData != undefined)
+        return this.realTimeData;
+      this.realTimeData = [];
+      for (var i = 0; i < this.length; i++) {
+        this.realTimeData.push(this.price[i][1]);
+      };
+      return this.realTimeData;
+    },
+
+
+    get length() { return this.time.length; },
+    /**
+     * @brief 最新k线的时间戳
+     */
+    get endTime() {
+      var time = this.time[this.length-1];
+      if ((typeof time) == 'string') {
+        // 合成完后就是字符串时间。
+        /// @todo 优化
+        if (time.indexOf('-') == -1) {
+          var t = time.split(':');
+          return time = (new Date()).setHours(parseInt(t[0]), parseInt(t[1]), parseInt(t[2]));
+        };
+        time = new Date(time.replace(/-/g,"/"));
+        return time.getTime();
+      };
+      return this.time[this.length-1];
+    },
+    get beginTime() { return this.time[0]; },
+
+
+  };
+
+  return BarsBuffer;
+})();
+
+
+var BarsDelegate = (function BarsDelegate() {
+
+  /*function BarsDelegate(contract, period, scope) {*/
+  function BarsDelegate(contract, period, location_) {
+
+    /// @todo 在数据服务器加一个1.RealTime类型,
+    /// 就不需要特殊处理，也满足了价格获取场景需要。
+    this.period = (period == "1.RealTime" ? "1.Minute" : period);
+    this._logger = log.getLogger("KCOMPOSE");
+    this._logger.setLevel("debug");
+    this.key = period;  // 可能是1.RealTime
+    //var contract = '600000.sse';
+    this.contract = contract;
+    this.buffer = new BarsBuffer();
+    this._tempCache = new BarsBuffer();
+    this.isComplete = false;
+    this.sentHistroyRequest = false;
+    this._barNumer = 30;
+
+    this._url =  'http://120.24.222.183:12008/reqNHistory?';   // 请求数据的列表h1
+    this._turl =  'http://120.24.222.183:12008/reqNHistory?';   // 请求数据的列表h1
+    this._active = true;
+    this._observers = [];
+    this._location = location_;
+
+    if (contract != "cctest.sse") {
+      var now = new Date();
+      var closetime = (new Date()).setHours(15,0,0);
+      /*if (now > closetime) {*/
+
+      /*logger.debug("********************in");*/
+      /*logger.debug("begin_dt: " + moment(begin_dt).format("YYYY-MM-DD HH:mm:ss"));*/
+      /*logger.debug("end_dt: " + moment(end_dt).format("YYYY-MM-DD HH:mm:ss"));*/
+      /*logger.debug("********************");*/
+      var self = this;
+      var url = this._url
+      var n = this._barNumer;
+      if (this.key == "1.RealTime") {
+        url =  'http://120.24.222.183:12008/reqNDHistory?';   // 请求数据的列表h1
+        n = 1;
+      };
+      /*console.log("------------------");*/
+      /*console.log(url);*/
+      /*console.log(contract);*/
+      /*console.log(this.period);*/
+      /*console.log(n);*/
+      /*console.log(data);*/
+      /*throw "EEEEEEEEEEE";*/
+      $.ajax({
+        url: url,
+        type:'get',         //数据发送方式
+        dataType:'json',     //接受数据格式
+        data: {
+          requestId: 1,
+          n: n,
+          contract: contract,
+          period: this.period,
+        },
+
+        success:function(data){
+          self._logger.debug("historyData length: ", data.open.length);
+          self.buffer.fromArraySource(data.time, data.open, data.close,
+                                      data.high, data.low, data.volume);
+          self.buffer.time = self.buffer.time.map(function (elem) {
+            var format = (self.period == "1.Day" ? "YYYY-MM-DD" : "HH:mm:ss")
+            return moment(elem).format(format);
+          })
+
+          self._logger.debug("服务器数据", self.buffer.info());
+          if (self._active) {
+            self.notifyBarReady();
+          };
+        },
+
+        error: function (data) {
+          logger.error(data);
+        },
+        //async:false
+      });
+        /*};*/
+    };
+
+
+
+  }
+
+  BarsDelegate.prototype = {
+
+    constructor: BarsDelegate,
+
+    setActive: function (v) {
+      this._active = v;
+    },
+
+    addObserver: function (obs) {
+      obs.path = this._location.$$path;
+      this._observers = [];  // todo 此是临时方案。
+      this._observers.push(obs);
+    },
+
+    removeObserver: function (obs) {
+      throw "unimplemented";
+    },
+
+    _visible: function (obs) {
+      return this._location.$$path == obs.path;
+    },
+
+    notifyBarReady: function () {
+      if (this._active) {
+        for (var i = 0; i < this._observers.length; i++) {
+          var observer = this._observers[i];
+          if (this._visible(observer)) {
+            observer.onBarReady(this);
+          };
+        };
+      };
+    },
+
+    /** 通知k线变化 */
+    notifyTickReady: function () {
+      if (this._active) {
+        for (var i = 0; i < this._observers.length; i++) {
+          var observer = this._observers[i];
+          if (this._visible(observer)) {
+            observer.onBarTick(this);
+
+          };
+        };
+      };
+    },
+
+    /** 通知k线变化 */
+    notifyNewBar: function () {
+      if (this._active) {
+        for (var i = 0; i < this._observers.length; i++) {
+          var observer = this._observers[i];
+          if (this._visible(observer)) {
+            observer.onBarNew(this);
+          };
+        };
+      };
+    },
+
+
+    // 模拟浏览器收到tick数据
+    onTick: function (tick) {
+
+      var logger = this._logger;
+      var cache = (this.isComplete ? this.buffer : this._tempCache);
+
+      // 缓存tick的k线
+      // 用下一个周期的tick数据来确定当前k线数据已经完毕，并存储对齐做为当前k线的最终时间。
+      if(cache.length == 0 ||
+          !this._isSamePeriod(cache.endTime, tick.time, this.period)) {
+            // 在数组为空，或者新的周期数据到达后创建一根k线。
+            // 更新k线对齐时间。
+            if (cache.length > 0) {
+              var alignedTime = this._getAlignedTime(cache.endTime, this.period);
+              if (this.isComplete) {
+                // 用于显示，不用管
+                var format = (this.period == "1.Day" ? "YYYY-MM-DD" : "HH:mm:ss")
+                alignedTime = moment(alignedTime).format(format);
+              };
+              cache.updateLastAlignedTime(alignedTime);
+              logger.debug("alignedTime:", alignedTime, this.period);
+            };
+            //
+            var shift = true;
+            if (this.key == "1.RealTime") {
+              shift = false;
+            };
+            // 这个tick时间是属于下一个k线的。
+            cache.addItem(tick.time, tick.close, tick.close,
+                          tick.close, tick.close, tick.volume, shift);
+            logger.debug("add new bar", moment(tick.time).format("HH:mm:ss"), this.period);
+            cache.alignedTime = this._getAlignedTime(cache.endTime, this.period);// 用来控制显示
+            cache.alignedTime = moment(cache.alignedTime).format("HH:mm:ss");
+            if (this.isComplete) {
+              /*console.log(this.buffer.time);*/
+              this.notifyNewBar();
+            };
+      } else {
+        // 更新最新的bar的时间
+        cache.updateLastItem(tick.time, tick.close, tick.close, tick.close, tick.volume);
+        cache.alignedTime = this._getAlignedTime(cache.endTime, this.period);// 用来控制显示
+        cache.alignedTime = moment(cache.alignedTime).format("HH:mm:ss");
+        // 更新最后一根k线
+        if (this.isComplete) {
+          this.notifyTickReady();
+        };
+        logger.debug("update bar", moment(tick.time).format("HH:mm:ss"), this.period);
+      }
+
+      /*console.log(this.buffer.time);*/
+
+      // 需要的话获取历史数据
+      if (!this.sentHistroyRequest) {
+        this.sentHistroyRequest = true;
+
+        var ftick  = moment(tick.time).format("DD-MM-YYYY HH:mm:ss");
+        logger.debug("FirstTick: ");
+        logger.debug(ftick);
+        var url = this._url
+        var n = this._barNumer;
+        if (this.key == "1.RealTime") {
+          url =  'http://120.24.222.183:12008/reqNDHistory?';   // 请求数据的列表h1
+          n = 1;
+        };
+        var params = {};
+        params.contract = this.contract;
+        params.period = this.period;
+        params.requestId = 1;
+        params.n = n;
+        var self = this;
+
+        if (this.contract == 'CCTEST.SSE') {
+          end_dt = tick.time;
+          begin_dt = tick.time - 1000 * 3600 * 12;
+          params.requestId = 1;
+          params.begin_dt = begin_dt;
+          params.end_dt = end_dt;
+          url =  'http://120.24.222.183:12008/reqHistory?';   // 请求数据的列表h1
+        };
+
+
+        $.ajax({
+          url: url,
+          type:'get',         //数据发送方式
+          dataType:'json',     //接受数据格式
+          data: params,
+          success:function(data){
+            self._logger.debug("historyData length: ", data.open.length);
+            /*console.log(moment(data.time[0]).format("YYYY-MM-DD HH:mm:ss"));*/
+            /*throw "ee";*/
+            self.buffer = new BarsBuffer();
+            self.buffer.alignedTime = self._tempCache.alignedTime;
+            self.buffer.fromArraySource(data.time, data.open, data.close, data.high, data.low, data.volume);
+            self._compose(self._tempCache, self.buffer);
+            var format = (self.period == "1.Day" ? "YYYY-MM-DD" : "HH:mm:ss")
+
+            self.buffer.time = _.map(self.buffer.time, function (elem) {
+              return moment(elem).format(format);
+            })
+
+            self._logger.debug("服务器数据", self.buffer.info());
+
+            logger.debug("合成结果： ", self.buffer.time);
+            self.isComplete = true;
+            if (self._active) {
+              self.notifyBarReady();
+            };
+
+          },
+
+          error: function (data) {
+            logger.error(data);
+          },
+          //async:false
+        });
+      }
+    },
+
+    _compose: function(browser, server) {
+      if(browser.length ==0) {
+        return server;
+      }
+      this._logger.debug("******************");
+      this._logger.debug("浏览器缓冲", browser.info());
+      this._logger.debug("服务器数据", server.info());
+      this._logger.debug("*******************");
+      // 首尾不同周期
+      if(server.length == 0 ||
+          !this._isSamePeriod(server.endTime,
+                             this._getAlignedTime(browser.beginTime, this.period),
+                             this.period)) {
+            for (var i =0; i < browser.length; i++) {
+              server.addItem(browser.time[i], browser.price[i][0], browser.price[i][1],
+                  browser.price[i][3], browser.price[i][2], browser.volume[i]);
+            }
+            return server;
+          }
+      // 首尾同一周期。
+      server.updateLastItem(browser.time[0], browser.price[0][1],
+                            browser.price[0][3], browser.price[0][2],
+                            browser.volume[0]);
+
+      // this.browser第二个开始的元素追加到server尾部
+      for (var i = 1; i < browser.length; i++) {
+        server.addItem(browser.time[i], browser.price[i][0], browser.price[i][1],
+            browser.price[i][3], browser.price[i][2], browser.volume[i]);
+      }
+      return server;
+    },
+
+    /*
+     * 日内周期的尾部，其它周期的头部时间。
+     * 假设日内时间为10:01:30, 返回的时间为10:02:00
+     */
+    _getAlignedTime: function (utime, period){
+      utime = parseInt(utime);
+      switch(period) {
+        case '1.Minute':
+          // 其实会结束的特殊时间段，比如竞价时间段内的数据对齐时间
+          var ret = getSpecialStartTime(period, utime);
+          if(ret != 0) {
+            logger.debug("specialTime");
+            return ret;
+          } else {
+            // 假设日内时间为10:01:30, 返回的时间为10:02:00
+            return utime - (utime % (1 * ONE_MINUTE)) + 1 * ONE_MINUTE;
+          }
+        case '3.Minute':
+          var ret = getSpecialStartTime(period, utime);
+          if(ret != 0) {
+            return ret;
+          } else {
+            return utime - (utime % (3 * ONE_MINUTE)) + 3 * ONE_MINUTE;
+          }
+        case '5.Minute':
+          var ret = getSpecialStartTime(period, utime);
+          if(ret != 0) {
+            return ret;
+          } else {
+            return utime - (utime % (5 * ONE_MINUTE)) + 5 * ONE_MINUTE;
+          }
+        case '10.Minute':
+          var ret = getSpecialStartTime(period, utime);
+          if(ret != 0) {
+            return ret;
+          } else {
+            return utime - (utime % (10 * ONE_MINUTE)) + 10 * ONE_MINUTE;
+          }
+        case '15.Minute':
+          var ret = getSpecialStartTime(period, utime);
+          if(ret != 0) {
+            return ret;
+          } else {
+            return utime - (utime % (15 * ONE_MINUTE)) + 15 * ONE_MINUTE;
+          }
+        case '30.Minute':
+          var ret = getSpecialStartTime(period, utime);
+          if(ret != 0) {
+            return ret;
+          } else {
+            return utime - (utime % (30 * ONE_MINUTE)) + 30 * ONE_MINUTE;
+          }
+        case '60.Minute':
+          var ret = getSpecialStartTime(period, utime);
+          if (ret != 0) {
+            return ret;
+          } else {
+            /*console.log(utime);*/
+            /*console.log(moment(utime).format("YYYY-MM-DD HH:mm:ss"));*/
+            /*console.log(ret);*/
+            /*throw "ee";*/
+            console.log('[getStartTime] ret=0, period= ' + period + ' utime= ' + utime);
+            return ret;
+          }
+        case '1.Day':
+          var date = new Date(utime);
+          date.setHours(0,0,0,0);
+          return date.getTime();
+        case '1.Week':
+          var date = new Date(utime);
+          date.setHours(0,0,0,0);
+          return date.getTime() - ((date.getDay()-1) * 24 *3600 * 1000);
+        case '1.Month':
+          var date = new Date(utime);
+          return new Date(date.getFullYear() + '-' + (date.getMonth()+1) + '-1').getTime();
+        case '1.Season':
+          var date = new Date(utime);
+          var mon = date.getMonth()+1;
+          mon = mon - (mon % 4);
+          return new Date(date.getFullYear() + '/' + mon + '/1').getTime();
+        case '1.Year':
+          var date = new Date(utime);
+          return new Date(date.getFullYear() + '/1/1').getTime();
+        default:
+          return 0;
+      }
+    },
+
+    _getWeekNumber: function (date){
+      var date=new Date(date.replace(/-/g,"/"));
+      var date2=new Date(1970, 0, 1);
+      var d = Math.round((date.getTime() - date2.getTime()+
+            (date2.getDay()-date.getDay())*(24*60*60*1000)) / 86400000);
+      return Math.ceil(d /7)+1;
+    },
+
+
+    _isSamePeriod: function (preTickTime, newTickTime, period){
+      // 时间取模相同，表示一个周期
+      // 比如比如一分钟线的[10:00, 10:59]秒间的数据
+      var ta = parseInt(preTickTime);
+      var tb = parseInt(newTickTime);
+      switch(period) {
+        case '1.Minute':
+          if( (Math.abs(ta - tb) < (1 * ONE_MINUTE)) &&
+              (Math.floor(ta / (1 * ONE_MINUTE)) == Math.floor(tb / (1 * ONE_MINUTE))) ) {
+            return true;
+          }
+          return isInSpecialTime(period, ta, tb);
+        case '3.Minute':
+          if ((Math.abs(ta - tb) < (3 * ONE_MINUTE)) &&
+              (Math.floor(ta / (3 * ONE_MINUTE)) == Math.floor(tb / (3 * ONE_MINUTE)))){
+            return true;
+          }
+          return isInSpecialTime(period, ta, tb);
+        case '5.Minute':
+          if( (Math.abs(ta - tb) < (5 * ONE_MINUTE)) &&
+              (Math.floor(ta / (5 * ONE_MINUTE)) == Math.floor(tb / (5 * ONE_MINUTE))) ) {
+            return true;
+          }
+          return isInSpecialTime(period, ta, tb);
+        case '10.Minute':
+          if( (Math.abs(ta - tb) < (10 * ONE_MINUTE)) &&
+              (Math.floor(ta / (10 * ONE_MINUTE)) == Math.floor(tb / (10 * ONE_MINUTE))) ) {
+            return true;
+          }
+          return isInSpecialTime(period, ta, tb);
+        case '15.Minute':
+          if ( (Math.abs(ta - tb) < (15 * ONE_MINUTE)) &&
+              (Math.floor(ta / (15 * ONE_MINUTE)) == Math.floor(tb / (15 * ONE_MINUTE))) ) {
+            return true;
+          }
+          return isInSpecialTime(period, ta, tb);
+        case '30.Minute':
+          if ( (Math.abs(ta - tb) < (30 * ONE_MINUTE)) &&
+              (Math.floor(ta / (30 * ONE_MINUTE)) == Math.floor(tb / (30 * ONE_MINUTE))) ) {
+            return true;
+          }
+          return isInSpecialTime(period, ta, tb);
+        case '60.Minute':
+          return isInSpecialTime(period, ta, tb);
+        case '1.Day':
+          return (Math.abs(ta - tb) < (24* 60 * ONE_MINUTE)) &&
+                  (new Date(ta).getDay() == new Date(tb).getDay());
+        case '1.Week':
+          var da = new Date(ta);
+          var db = new Date(tb);
+          return this._getWeekNumber(da.toLocaleDateString()) == this._getWeekNumber(db.toLocaleDateString());
+        case '1.Month':
+          var da = new Date(ta);
+          var db = new Date(tb);
+          return da.getFullYear() == db.getFullYear() && da.getMonth() == db.getMonth();
+        case '1.Season':
+          var da = new Date(ta)
+            var db = new Date(tb)
+            return da.getFullYear() == db.getFullYear() &&
+                   ( da.getMonth() - db.getMonth() < 4) && (da.getMonth() /4 ==  db.getMonth()/4);
+        case '1.Year':
+          var da = new Date(ta)
+            var db = new Date(tb)
+            return da.getFullYear() == db.getFullYear();
+        default:
+          console.log('error period = ' + period);
+          return false;
+      }
+    },
+
+  }
+  return BarsDelegate;
+})();
+
+
+var FuncDebug = (function FuncDebug() {
+
+  function FuncDebug(logger) {
+    this.logger = logger;
+  }
+
+  FuncDebug.prototype = {
+    constructor: FuncDebug,
+
+    trace: function (mark, input, output, err) {
+      this._output(this.logger.trace.bind(this.logger), mark, input, output, err);
+    },
+
+    debug: function (mark, input, output, err) {
+      this._output(this.logger.debug.bind(this.logger), mark, input, output, err);
+    },
+
+    info: function (mark, input, output, err) {
+      this._output(this.logger.info.bind(this.logger), mark, input, output, err);
+    },
+
+    warn: function (mark, input, output, err) {
+      this._output(this.logger.warn.bind(this.logger), mark, input, output, err);
+    },
+
+    error: function (mark, input, output, err) {
+      this._output(this.logger.error.bind(this.logger), mark, input, output, err);
+    },
+
+    _output: function (log, mark, input, output, err) {
+      // body...
+      log("------" + mark + "-------");
+      if (input) {
+        log("*input:*");
+        log(input);
+      };
+      if (output) {
+        log("*output:*");
+        log(output);
+      }
+      if (err) {
+        log("*error:*");
+        log(err);
+      }
+      log("********************");
+    },
+  };
+  return FuncDebug;
+})();
+
+
+/** 当日委托 */
+var OrderItem = (function OrderItem() {
+
+  function OrderItem(order) {
+    if (order) {
+      this.key = order.contract + "." + order.exchangeId;
+      this.contract = order.contract;
+      this.exchangeId = order.exchangeId;
+      this.name = (key2name[this.key] ? key2name[this.key] : order.contract);
+      this.state = order.state;
+      this.direction = (order.direction == 'LONG' ? '多' : '空');
+      this.action = (order.side == 'KAI' ? '买入' : '卖出');
+      this.action = (order.canceled ? '撤单' : this.action);
+      this.price = (order.price == 0 ? '市价': parseFloat(order.price).toFixed(2));
+      this.quantity = order.quantity;
+      this._filledQuantity = order.filledQuantity;
+      this.orderNo = order.id;
+      this.loginId = order.loginId;
+      this.productId = order.productId;
+      this.datetime = moment(order.datetime).format("HH:mm:ss");
+    } else {
+      this.key = "";
+      this.contract = "";
+      this.exchangeId = "";
+      this.name = "";
+      this.state = "";
+      this.direction = "";
+      this.action = "";
+      this.action = "";
+      this.price = "";
+      this.quantity = "";
+      this._filledQuantity = "";
+      this.orderNo = "";
+      this.loginId = "";
+      this.productId = "";
+      this.datetime = "";
+    }
+    switch(this.state) {
+      case 0:
+        this.status = '已报';
+        break;
+      case 1:
+        this.status = '已撤';
+        break;
+      case 2:
+        this.status = '成交';
+        break;
+      case 3:
+        this.status = '部分成交';
+        break;
+
+      default:
+        this.status = '';
+
+    }
+  }
+  OrderItem.prototype = {
+    constructor: OrderItem,
+    set filledQuantity(v) {
+      this._filledQuantity = v;
+      // 只有onTransToday, onOrderToday有2，3两种状态，
+      // 所以要另外计算。
+      if (this._filledQuantity > 0 && this.quantity > this._filledQuantity ) {
+        this.status = "部分成交";
+        this.state = 4;
+      };
+      if (this._filledQuantity > 0 && this.quantity == this._filledQuantity ) {
+        this.status = "成交";
+        this.state = 3;
+      };
+    },
+    get filledQuantity() {
+      return this._filledQuantity;
+    },
+  };
+  return OrderItem;
+})();
+
+
+/** 当日成交 */
+var TransactionItem = (function TransactionItem() {
+
+  function TransactionItem(trans) {
+    if (trans) {
+      this.key = trans.contract + "." + trans.exchangeId;
+      this.name = (key2name[this.key] ? key2name[this.key] : trans.contract);
+      this.direction = (trans.direction == 'LONG' ? '多' : '空');
+      this.side = (trans.side == 'KAI' ? '开仓' : '平仓');
+      this.action = (trans.side == 'KAI' ? '买入' : '卖出');
+      this.price = parseFloat(trans.price).toFixed(2);
+      this.quantity = trans.quantity;
+      this.orderNo = trans.orderId;
+      this.transNo = trans.id;
+      this.datetime = moment(trans.datetime).format("HH:mm:ss");
+      this.note = "";
+      this.commission = (parseFloat(this.price) * parseFloat(this.quantity) * 3/10000).toFixed(1);
+      this.orderPrice = -1;
+      this.orderTime = "";
+      /*this.orderPrice = parseFloat(this.orderPrice).toFixed(1);*/
+    } else {
+      this.key = "";
+      this.name = "";
+      this.direction = "";
+      this.side = "";
+      this.action = "";
+      this.price = "";
+      this.quantity = "";
+      this.orderNo = "";
+      this.transNo = "";
+      this.datetime = "";
+      this.note = "";
+      this.commission = "";
+      this.orderPrice = "";
+      this.orderTime = "";
+    }
+  }
+  TransactionItem.prototype = {
+    constructor: TransactionItem,
+  };
+  return TransactionItem;
+})();
+
+/** 当日持仓 */
+var PositionItem = (function PositionItem() {
+
+  function PositionItem(pos) {
+    if (pos) {
+      this.key = pos.contract + "." + pos.exchangeId;
+      this.name = (key2name[this.key] ? key2name[this.key] : pos.contract);
+      this.cost = parseFloat(pos.cost).toFixed(2);
+      this.profit = parseFloat(pos.profit).toFixed(2);
+      this.margin = parseFloat(pos.margin).toFixed(2);
+      this.direction = (pos.direction == 'LONG' ? '多' : '空');
+      this.quantity = parseFloat(pos.quantity);
+      this.todayQuantity = parseFloat(pos.todayQuantity);
+
+    } else {
+      /*this.key = "";      */
+      /*this.name = "";         // 名称*/
+      /*this.direction = "";    // 多空*/
+      /*this.side = "";         // 开平*/
+      /*this.cost = "";        // 持仓成本*/
+      /*this.quantity = "";     // 数目*/
+      /*this.kePing = "";        // 可平数量*/
+      /*this.margin = "";        // 保证金*/
+      /*this.positionProfit = "";        // 持仓盈亏*/
+      /*this.todayQuantity = "";*/
+      /*this.profit="";*/
+
+      this.key = "";
+      this.name = "";
+      this.cost = "";
+      this.profit = "";
+      this.margin = "";
+      this.direction = "";
+      this.quantity = "";
+      this.todayQuantity = "";
+    }
+  }
+  PositionItem.prototype = {
+    constructor: PositionItem,
+  };
+  return PositionItem;
+})();
+
+/** 当日持仓 */
+var FollowItem = (function FollowItem() {
+  function FollowItem(type, trans) {
+    this.name = (key2name[trans.contract+'.'+trans.exchangeId]
+      ? key2name[trans.contract+'.'+trans.exchangeId]
+      : trans.contract);
+    this.productName=trans.name;
+    this.price = parseFloat(trans.price).toFixed(2);
+    this.direction = (trans.direction == 'LONG' ? '多头' : '空头');
+    this.side = (trans.side == 'KAI' ? '买入' : '卖出');
+    this.contract = trans.contract;
+    this.exchangeId = trans.exchangeId;
+    this.quantity = trans.quantity;
+    this.datetime = moment(trans.datetime).format("HH:mm:ss");
+    this.followLoginId = trans.followLoginId;
+    this.followProductId = trans.followProductId;
+    this.auto = true;
+    if (type == "manual" || type == "focus") {
+      this.auto = false;
+    };
+    /*this.productId = trans.productId;*/
+    /*this.loginId = trans.loginId;*/
+  }
+  FollowItem.prototype = {
+    constructor: FollowItem,
+  };
+  return FollowItem;
+})();
+
+

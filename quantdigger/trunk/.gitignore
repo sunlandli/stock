@@ -1,0 +1,15 @@
+*.pyc
+*.swp
+*.DS_Store
+
+
+.idea/
+dist/
+*.egg-info/
+build/
+demo/work/*
+tests/work/
+
+_local_*
+demo/log
+__pycache__

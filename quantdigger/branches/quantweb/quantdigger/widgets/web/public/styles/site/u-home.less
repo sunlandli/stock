@@ -1,0 +1,450 @@
+
+.layout {
+    min-height: 750px;
+    padding-top: 10px;
+    padding-bottom: 50px;
+    // overflow: hidden;
+    // zoom: 1;
+}
+.sidebar {
+    float: left;
+    width: 22%;
+}
+.main {
+    // overflow: hidden;
+    // zoom: 1;
+    float: left;
+    width: 78%;
+    padding-left: 15px;
+}
+// 用户卡片
+.user-box {
+    background-color: #fff;
+}
+.user-box-pic {
+    text-align: center;
+    padding: 20px;
+}
+.user-box-avatar {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+}
+.user-box-info {
+    border-top: 1px solid #eee;
+    padding: 10px 20px;
+    .label {
+        font-size: 12px;
+    }
+    .data {
+        color: #f00;
+    }
+}
+
+// 用户中心菜单
+.user-menu {
+    margin-top: 20px;
+    background-color: #fff;
+}
+.user-menu-group {
+    .title {
+        font-size: 16px;
+        font-weight: 400;
+        // border-top: 1px solid #eee;
+        // border-bottom: 1px solid #eee;
+        background-color: #eee;
+        height: 35px;
+        line-height: 35px;
+        padding-left: 20px;
+        margin-bottom: 0;
+        // color: #fff;
+    }
+    ul {
+        background-color: #fff;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        // border-left: 3px solid #eee;
+        li {
+            &.active a {
+                // background-color: #f8f8f8;
+                // border-color: #6cf;
+                color: #6cf;
+            }
+            a {
+                display: block;
+                width: 100%;
+                height: 30px;
+                line-height: 30px;
+                padding-left: 17px;
+                padding-right: 17px;
+                border-left: 3px solid transparent;
+                color: #666;
+                // margin-left: -3px;
+                &:hover {
+                    // border-color: #6cf;
+                    color: #6cf;
+                }
+            }
+            .count {
+                display: inline-block;
+                height: 18px;
+                line-height: 18px;
+                padding: 0 10px;
+                margin-top: 6px;
+                border-radius: 18px;
+                background-color: #FF5A61;
+                color: #fff;
+                font-size: 12px;
+                text-align: center;
+            }
+        }
+    }
+}
+
+// 股票信息列表
+.stock-info-box {
+    background-color: #fff;
+    padding: 10px;
+}
+.stock-info-list {
+    margin-bottom: 0;
+    width: 100%;
+}
+.stock-info-item {
+    float: left;
+    width: 20%;
+    text-align: center;
+    .label {
+        margin: 0;
+        font-weight: 400;
+        font-size: 16px;
+        margin-bottom: 5px;
+    }
+    .data {
+        font-size: 18px;
+        color: #f03;
+        margin-bottom: 0;
+        line-height: 1;
+    }
+    .percent {
+        font-size: 12px;
+        color: #f03;
+    }
+}
+// 自选股
+.my-stocks-box {
+    margin-top: 15px;
+    background-color: #fff;
+}
+.my-stocks-header {
+    .tools-box {
+        height: 50px;
+        // line-height: 50px;
+        margin-right: 20px;
+        padding-top: 12px;
+        .input-search {
+            // margin-bottom: 0;
+            // padding: 0;
+            border: 2px solid #6cf;
+        }
+        .btn-create {
+            display: inline-block;
+            width: 95px;
+            height: 30px;
+            margin-top: -2px;
+            line-height: 30px;
+            text-align: center;
+            // padding: 8px 18px;
+            /*border: 1px solid #6cc;*/
+            background-color: #6cf;
+            font-size: 12px;
+            // border-radius: 2px;
+            color: #fff;
+            &:hover {
+                opacity: .8;
+            }
+        }
+    }
+    background-color: #fefefe;
+    .title {
+        display: inline-block;
+        height: 50px;
+        line-height: 50px;
+        margin-top: 0;
+        margin-bottom: 0;
+        font-size: 16px;
+        margin: 0 20px;
+        cursor: pointer;
+        &:hover {
+            color: #6cf;
+        }
+        &.active {
+            color: #6cf;
+        }
+    }
+    // .mark {
+    //     padding: 3px 8px;
+    //     background-color: #6cc;
+    //     font-size: 12px;
+    //     color: #fff;
+    //     border-radius: 2px;
+    // }
+}
+.my-stocks-list {
+    // padding: 10px 20px;
+    .table {
+        width: 100%;
+    }
+    .thead-tr {
+        height: 30px;
+        border-top: 1px solid #eee;
+        border-bottom: 1px solid #eee;
+        th {
+            font-weight: 400;
+            color: #999;
+        }
+    }
+    .tbody tr {
+        border-bottom: 1px solid #eee;
+        color: #999;
+        &:last-child {
+            border-bottom: none;
+        }
+        &:hover {
+            background-color: #F7FDFF;
+        }
+    }
+    td {
+        height: 65px;
+        text-align: center;
+    }
+    a {
+        // text-decoration: underline;
+    }
+    .star {
+        color: #999;
+        cursor: pointer;
+        &:hover {
+            color: #6cc;
+        }
+    }
+    .cancle-follow {
+        display: inline-block;
+        padding: 3px 8px;
+        background-color: #ccc;
+        color: #fff;
+        font-size: 12px;
+        font-style: normal;
+        cursor: pointer;
+        &:hover {
+            opacity: .8;
+        }
+    }
+    .no-data {
+        position: relative;
+        height: 230px;
+        // padding-top: 50px;
+        text-align: center;
+        .iconfont {
+            font-size: 32px;
+        }
+    }
+}
+
+// 关注的产品---操作
+.follow-more{
+    // position: relative;
+    button {
+        border: none;
+        outline: none;
+        background: none;
+    }
+    // ul {
+    //     position: absolute;
+    //     z-index: 1000;
+    //     top: 30px;
+    //     left: 0;
+    //     right: 0;
+    //     padding-top: 10px;
+    //     padding-bottom: 10px;
+    //     background-color: #fff;
+    //     box-shadow: 0 0 6px #ccc;
+    //     color: #333;
+    // }
+    // li {
+    //     height: 30px;
+    //     line-height: 30px;
+    //     text-align: center;
+    //     cursor: pointer;
+    //     &:hover {
+    //         background-color: #eee;
+    //         color: #f90;
+    //     }
+    // }
+}
+
+
+// 创建组合
+.create-product-box {
+    .dialog-ft {
+        border-top: 1px solid #eee;
+    }
+    .form-group{
+        font-size: 0;
+    }
+    label {
+        display: inline-block;
+        width: 20%;
+        color: #666;
+        font-size: 14px;
+        vertical-align: middle;
+        padding-right: 15px;
+    }
+    textarea,
+    input[type='text'],
+    input[type='password'], {
+        display: inline-block;
+        width: 80%;
+        padding: 6px 10px;
+        border-radius: 2px;
+        border: 1px solid #eee;
+        outline: none;
+        font-size: 14px;
+        vertical-align: middle;
+        &:focus {
+            border-color: rgba(0,153,204,.5);
+        }
+    }
+    .input-text {
+        // height: 30px;
+        // line-height: 30px;
+    }
+    .textarea {
+        height: 58px;
+        resize: none;
+    }
+    .btn-create {
+        width: 50%;
+        height:45px;
+        color: #fff;
+        border-radius: 2px;
+        border: none;
+        outline: none;
+        background-color: rgba(0,153,204,1);
+        color: #fff;
+        &:hover {
+            background-color: rgba(0,153,204,.8);
+        }
+    }
+    .btn-radio {
+        display: block;
+        width: 45%;
+        height: 30px;
+        line-height: 30px;
+        border: 1px solid #eee;
+        border-radius: 2px;
+        &:first-child.active,
+        &:first-child:hover {
+            border-color: #09c;
+            color: #09c;
+        }
+        &:last-child.active,
+        &:last-child:hover {
+            border-color: #9c0;
+            color: #9c0;
+        }
+    }
+    .group-a,
+    .group-b {
+        width: 45%;
+    }
+}
+
+// 我的主题
+.my-forum-box {
+    // margin-top: 15px;
+    background-color: #fff;
+    .table {
+        width: 100%;
+    }
+    .thead-tr {
+        height: 30px;
+        border-top: 1px solid #eee;
+        border-bottom: 1px solid #eee;
+        th {
+            font-weight: 400;
+            color: #999;
+            &:first-child {
+                padding-left: 15px;
+                text-align: left;
+            }
+        }
+    }
+    .tbody tr {
+        border-bottom: 1px solid #eee;
+        color: #999;
+        &:last-child {
+            border-bottom: none;
+        }
+        &:hover {
+            background-color: #F7FDFF;
+        }
+    }
+    td {
+        width: 10%;
+        height: 65px;
+        text-align: center;
+        span {
+            display: inline-block;
+            width: 270px;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        &:first-child {
+            // width: 60%;
+            padding-left: 15px;
+            text-align: left;
+            a {
+                display: inline-block;
+                width: 350px;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                white-space: nowrap;
+            }
+        }
+    }
+}
+.my-forum-header {
+    background-color: #eee;
+    .title {
+        display: inline-block;
+        height: 50px;
+        line-height: 50px;
+        margin-top: 0;
+        margin-bottom: 0;
+        font-size: 16px;
+        margin: 0 20px;
+        cursor: pointer;
+        &:hover {
+            color: #6cf;
+        }
+        &.active {
+            color: #6cf;
+        }
+    }
+    .count {
+        display: inline-block;
+        // width: 28px;
+        height: 18px;
+        line-height: 18px;
+        padding: 0 10px;
+        border-radius: 18px;
+        background-color: #ccc;
+        color: #fff;
+        text-align: center;
+        &.active {
+            background-color: #6cf;
+        }
+    }
+}

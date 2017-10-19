@@ -1,0 +1,279 @@
+.sp-all-wrap {
+    // 公用
+    .sp-header {
+        height: 38px;
+        padding: 5px 0;
+        border-bottom: 2px solid #eee;
+        h4 {
+            float: left;
+            font-size: 16px;
+            line-height: 28px;
+        }
+        a.create-btn {
+            display: block;
+            float: right;
+            padding: 3px 5px;
+            border-radius: 2px;
+            color: #fff;
+            background-color: rgba(102, 204, 204, 1);
+            &:hover {
+                background-color: rgba(102, 204, 204, .8);
+            }
+        }
+        a.more {
+            float: right;
+            color: #888;
+            line-height: 28px;
+            &:hover {
+                color: #6cc;
+            }
+        }
+    } // 公用 end
+    .sp-main {
+        margin-top: 20px;
+        .main-left {
+            float: left;
+            width: 70%;
+            .sp-body {
+                ul.group-list {
+                    li.group {
+                        padding: 20px 0;
+                        border-bottom: 1px solid #eee;
+                        &:last-child {
+                            border-color: transparent;
+                        }
+                        .group-nointerest {
+                            display: none;
+                            cursor: pointer;
+                        }
+                        &:hover {
+                            .group-nointerest {
+                                display: block;
+                            }  
+                        }
+                        .group-left {
+                            float: left;
+                            width: 20%;
+                            .circle {
+                                display: table-cell;
+                                width: 150px;
+                                height: 150px;
+                                border-radius: 50%;
+                                color: #fff;
+                                background-color: rgba(255, 204, 0, 1);
+                                vertical-align: middle;
+                                text-align: center;
+                            }
+                            a {
+                                display: block;
+                            }
+                            small {
+                                font-size: 50%;
+                            }
+                        }
+                        .group-right {
+                            float: right;
+                            width: 80%;
+                            padding-left: 30px;
+                            padding-top: 10px;
+                            padding-bottom: 5px;
+                            .top {
+                                span {
+                                    padding: 2px 4px;
+                                    margin-right: 4px;
+                                    border-radius: 2px;
+                                }
+                                .market {
+                                    background-color: #6cc;
+                                    color: #fff;
+                                }
+                                .tag {
+                                    background-color: #eee;
+                                    color: #888;
+                                }
+                                a {
+                                    float: right;
+                                    padding: 2px 5px;
+                                    border: 1px solid rgba(102, 204, 204, 1);
+                                    color: rgba(102, 204, 204, 1);
+                                    border-radius: 2px;
+                                    &:hover {
+                                        color: #fff;
+                                        background-color: #6cc;
+                                    }
+                                }
+                            }
+                            .middle {
+                                margin-top: 20px;
+                                a {
+                                    font-size: 18px;
+                                }
+                                p {
+                                    color: #888;
+                                    height: 48px;
+                                    overflow: hidden;
+                                }
+                            }
+                            .bottom {
+                                span {
+                                    color: #888;
+                                    margin-right: 10px;
+                                }
+                                a {
+                                    color: #666;
+                                    &:hover {
+                                        color: #6cc;
+                                    }
+                                }
+                                strong {
+                                    color: #666;
+                                    font-weight: 400;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            .sp-footer {
+                a {
+                    display: block;
+                    width: 100%;
+                    height: 30px;
+                    line-height: 30px;
+                    text-align: center;
+                    background-color: #f8f8f8;
+                    color: #888;
+                    border: 1px solid #eee;
+                    &:hover {
+                        background-color: #fafafa;
+                    }
+                }
+            }
+        }
+        .main-right {
+            float: left;
+            width: 30%;
+            padding-left: 30px;
+            .industry {
+                ul {
+                    li {
+                        float: left;
+                        width: 33.33333%;
+                        text-align: center;
+                        padding: 6px 0;
+                        &:nth-child(1),
+                        &:nth-child(2),
+                        &:nth-child(3) {
+                            border-bottom: 1px solid #eee;
+                        }
+                        &:nth-child(2),
+                        &:nth-child(5) {
+                            a {
+                                border-left: 1px solid #eee;
+                                border-right: 1px solid #eee;
+                            }
+                        }
+                        a {
+                            display: block;
+                            width: 100%;
+                            height: 100%;
+                        }
+                        h5 {
+                            font-weight: 400;
+                        }
+                        strong {
+                            color: #d53;
+                            font-size: 18px;
+                        }
+                    }
+                }
+            }
+            .most-profitable {
+                margin-top: 20px;
+                ul.switch-tab {
+                    margin-top: 10px;
+                    li {
+                        float: left;
+                        width: 33.33333%;
+                        height: 30px;
+                        line-height: 30px;
+                        text-align: center;
+                        background-color: #eee;
+                        border-top: 1px solid #ddd;
+                        border-left: 1px solid #ddd;
+                        border-bottom: 1px solid #ddd;
+                        cursor: pointer;
+                        &:last-child {
+                            border-right: 1px solid #ddd;
+                        }
+                        &:hover {
+                            background-color: #f8f8f8;
+                        }
+                        &.active {
+                            background-color: #fff;
+                            border-bottom-color: #fff;
+                        }
+                    }
+                    &.stock {
+                        li {
+                            width: 25%;
+                        }
+                    }
+                }
+                ul.switch-query {
+                    margin-top: 10px;
+                    li {
+                        float: left;
+                        width: 33.33333%;
+                        text-align: center;
+                        cursor: pointer;
+                        color: #888;
+                        &.active {
+                            color: #666;
+                            font-weight: 700;
+                        }
+                        &:hover {
+                            color: #666;
+                            font-weight: 700;
+                        }
+                    }
+                    &.time {
+                        li {
+                            width: 50%;
+                        }
+                    }
+                }
+                ol.detail-list {
+                    margin-top: 10px;
+                    li {
+                        height: 28px;
+                        line-height: 28px;
+                        &:nth-child(1),
+                        &:nth-child(2),
+                        &:nth-child(3) {
+                            span {
+                                color: #f60;
+                            }
+                        }
+                        a {
+                            margin-left: 10px;
+                        }
+                        b {
+                            float: right;
+                            color: #f90;
+                            font-weight: 400;
+                        }
+                        p {
+                            float: right;
+                            color: #888;
+                            strong {
+                                color: #666;
+                                font-weight: 400;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

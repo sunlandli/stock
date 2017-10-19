@@ -1,0 +1,59 @@
+<div ui-view="rank" style="background-color: #FCF8F8;">
+<!-- <script src="/javascripts/rank.js"></script> -->
+  <div class="container">
+    <!-- 左栏 -->
+    <div class="sidebar" style="width: 18%;" ng-init="activeM = 1">
+      <!-- 排行榜菜单 -->
+      <div class="box box-rank-menu" ng-init="showTable = 'P'">
+        <h5 class="title mb0">组合排行榜</h5>
+        <ul class="list nols" ng-click="showTable = 'P'">
+          <li ng-class="{active: activeM == 1}" ng-click="getProductRank('total');activeM = 1">
+            <a href="">所有组合</a>
+          </li>
+          <li ng-class="{active: activeM == 2}" ng-click="getProductRank('follow');activeM = 2">
+            <a href="">跟投组合</a>
+          </li>
+          <li ng-class="{active: activeM == 3}" ng-click="getProductRank('trade');activeM = 3">
+            <a href="">交易组合</a>
+          </li>
+        </ul>
+      </div> <!-- 排行榜菜单 end -->
+
+      <div class="box box-rank-menu">
+        <h5 class="title mb0">用户排行榜</h5>
+        <ul class="list nols" ng-click="showTable = 'U'">
+          <li ng-class="{active: activeM == 4}" ng-click="getUserRank('total');activeM = 4">
+            <a href="">总获利排行</a>
+          </li>
+          <li ng-class="{active: activeM == 5}" ng-click="getUserRank('follow');activeM = 5">
+            <a href="">跟投获利排行</a>
+          </li>
+          <li ng-class="{active: activeM == 6}" ng-click="getUserRank('trade');activeM = 6">
+            <a href="">交易获利排行</a>
+          </li>
+        </ul>
+      </div>
+    </div> <!-- 左栏 end -->
+
+    <!-- 右栏 -->
+    <div is-loaded class="main" style="width: 82%;">
+
+      <div id="rankBoxA" ng-show="showTable == 'P'">
+        <table id="pTable" data-page="pTotal"></table>
+        <div style="text-align:right;">
+          <div id="pTotal"></div>
+        </div>
+      </div>
+
+      <div id="rankBoxB" ng-show="showTable == 'U'">
+        <table id="uTable" data-page="uTotal"></table>
+        <div style="text-align:right;">
+          <div id="uTotal"></div>
+        </div>
+      </div>
+
+    </div> <!-- 右栏 end -->
+  </div>
+</div>
+
+

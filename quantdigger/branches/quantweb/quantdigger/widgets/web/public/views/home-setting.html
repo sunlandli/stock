@@ -1,0 +1,114 @@
+<div class="st-header" ng-init="showTab = 1">
+  <ul class="st-menu nols clearfix">
+    <li ng-class="{active: showTab == 1}" ng-click="showTab = 1;">头像设置</li>
+    <li ng-class="{active: showTab == 2}" ng-click="showTab = 2;">个人资料</li>
+    <li ng-class="{active: showTab == 3}" ng-click="showTab = 3;">安全设置</li>
+  </ul>
+</div>
+<div class="st-body">
+  <!-- 设置头像 -->
+  <div class="st-avatar clearfix" ng-show="showTab == 1">
+    <div class="st-set-avatar fl" style="width: 400px;">
+      <!-- 截图选框 -->
+      <div id="cropAvatar" style="width: 350px;height: 350px;">
+        <img id="avatarCrop" src="/images/avatar-crop.jpg" alt="" width="350" height="350">
+      </div><!-- 截图选框 end -->
+
+      <div id="uploader" class="mt20">
+        <!--用来存放文件信息-->
+        <!-- <div id="thelist" class="uploader-list"></div> -->
+        <div class="btns tc">
+          <div id="picker" class="dib">选择文件</div>
+          <!-- <button id="ctlBtn" class="btn btn-default">开始上传</button> -->
+          <div id="setAvatar" class="btn-set-avatar" style="display: none;">保存</div>
+        </div>
+      </div>
+    </div>
+    <div class="st-current-avatar fr">
+      <img class="currentAvatar" src="[[ gUser.avatar ]]" alt="">
+      <p class="tc">当前头像</p>
+    </div>
+  </div> <!-- 设置头像 end -->
+
+  <!-- 个人资料 -->
+  <div class="st-profile" ng-show="showTab == 2">
+    <form class="clearfix" ng-submit="setMyProfile(formData)">
+      <div class="form-group clearfix">
+        <label class="label" for="nickname">昵称：</label>
+        <div class="model">
+          <input id="nickname" type="text" ng-model="formData.nickname">
+        </div>
+      </div>
+
+      <div class="form-group clearfix">
+        <label class="label" for="sex">性别：</label>
+        <div class="model">
+          <select id="sex" ng-model="formData.sex">
+            <option value="">--请选择性别--</option>
+            <option value="男">男</option>
+            <option value="女">女</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group clearfix">
+        <label class="label" for="age">年龄：</label>
+        <div class="model">
+          <input id="age" type="text" ng-model="formData.age">
+        </div>
+      </div>
+
+      <div class="form-group clearfix">
+        <label class="label" for="phone">手机：</label>
+        <div class="model">
+          <input id="phone" type="text" ng-model="formData.phone">
+        </div>
+      </div>
+
+      <div class="form-group clearfix">
+        <label class="label" for="city">城市：</label>
+        <div class="model">
+          <input id="city" type="text" ng-model="formData.city">
+        </div>
+      </div>
+
+      <div class="form-group clearfix">
+        <label class="label" for="job">职业：</label>
+        <div class="model">
+          <input id="job" type="text" ng-model="formData.job">
+        </div>
+      </div>
+
+      <div class="form-group clearfix" style="width: 100%;">
+        <label class="label" for="signature">签名：</label>
+        <div class="model">
+          <textarea id="signature" ng-model="formData.signature"></textarea>
+        </div>
+      </div>
+      <div class="mb20 tc">
+        <button class="btn-submit" type="submit">保存</button>
+      </div>
+    </form>
+  </div> <!-- 个人资料 end -->
+
+  <!-- 安全设置 -->
+  <div class="st-security" ng-show="showTab == 3">
+    <form name="setMyPasswordForm" ng-submit="setMyPassword(pw)">
+      <div class="form-group mb20 clearfix">
+        <label class="label" for="oldPassword">当前密码：<input id="oldPassword" type="password" ng-model="pw.oldPassword"></label>
+      </div>
+
+      <div class="mb20">
+        <label>设置密码：<input type="password" name="newPassword" ng-model="pw.newPassword" ng-minlength="6" ng-maxlength="18" required></label>
+        <p ng-show="setMyPasswordForm.newPassword.$dirty && setMyPasswordForm.newPassword.$error.minlength || setMyPasswordForm.newPassword.$error.maxlength" style="color: #f90;">请输入长度在6~18之间(字母、数字、下划线)。</p>
+      </div>
+      <div class="mb20">
+        <label>确认密码：<input type="password" name="confirmPassword" ng-model="pw.confirmPassword" required></label>
+        <p ng-show="setMyPasswordForm.confirmPassword.$dirty && pw.newPassword != pw.confirmPassword" style="color: #f90;">两次输入密码不一致，请重试！</p>
+      </div>
+       <div class="mb20">
+        <button type="submit" ng-disabled="setMyPasswordForm.$invalid || pw.newPassword != pw.confirmPassword">确定</button>
+      </div>
+    </form>
+  </div> <!-- 安全设置 end -->
+</div>

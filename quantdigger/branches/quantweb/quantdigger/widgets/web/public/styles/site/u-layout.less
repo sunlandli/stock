@@ -1,0 +1,119 @@
+/**
+ * 个人中心的全局导航
+ */
+.header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    min-width: 1110px;
+    height: 58px;
+    background-color: #6cf;
+    // box-shadow: 0 3px 10px #eee;
+    z-index: 999;
+}
+.navbar-list {
+    display: inline-block;
+    margin-bottom: 0;
+}
+.navbar-item {
+    float: left;
+    height: 58px;
+    line-height: 58px;
+    > a {
+        display: inline-block;
+        height: 58px;
+        // line-height: 56px;
+        padding-left: 24px;
+        padding-right: 24px;
+        color: #fff;
+        &.active {
+            background-color: rgba(0,0,0,.1);
+        }
+    }
+}
+.pos-r {
+    position: relative;
+}
+.input-search {
+    display: block;
+    width: 180px;
+    height: 26px;
+    border: none;
+    outline: none;
+    background-color: #fff;
+    line-height: 1.2;
+    padding: 5px;
+}
+.icon-search {
+    position: absolute;
+    top: 0;
+    right: 10px;
+    color: #999;
+    cursor: default;
+}
+.navbar-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    vertical-align: middle;
+}
+.navbar-logo {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    font-size: 32px;
+    color: #fff;
+    height: 58px;
+    line-height: 58px;
+    margin-left: -48px;
+}
+.header .dropdown {
+    position: relative;
+    &:hover .dropdown-menu {
+        display: block;
+    }
+}
+.header .dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 58px;
+    left: -100%;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background-color: #fff;
+    border: 1px solid #eee;
+    white-space: nowrap;
+    border-radius: 4px;
+    a {
+        display: block;
+        height: 45px;
+        line-height: 45px;
+        padding-left: 15px;
+        padding-right: 15px;
+        &:hover {
+            background-color: #eee;
+        }
+    }
+    .arrow {
+        position: absolute;
+        top: -8px;
+        right: 37%;
+        width: 16px;
+        height: 16px;
+        border-left: 1px solid #eee;
+        border-top: 1px solid #eee;
+        background-color: #fff;
+        -webkit-transform: rotate(45deg);
+        -moz-transform: rotate(45deg);
+        -o-transform: rotate(45deg);
+        transform: rotate(45deg);
+    }
+}
+
+/**
+ * 个人中心的主体布局
+ */
+.body {
+    margin-top: 58px;
+    background-color: #f8f8f8;
+}

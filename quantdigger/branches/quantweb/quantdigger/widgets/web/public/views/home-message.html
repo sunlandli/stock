@@ -1,0 +1,36 @@
+<div class="my-forum-box">
+  <div class="my-forum-header" ng-init="showMessage = 1">
+    <span class="title mr5" ng-class="{active: showMessage == 1}" ng-click="getMyPostMessage('unread');showMessage = 1">未读消息</span>
+    <span class="count" style="background-color: #FF5A61;">[[ unreadCount ]]</span>
+    <span class="title" ng-class="{active: showMessage == 2}" ng-click="getMyPostMessage('read');showMessage = 2">已读消息</span>
+    <!-- <span class="count" ng-class="{active: showMessage == 2}">[[ readCount ]]</span> -->
+  </div>
+  <div class="my-forum-body">
+    <table class="table">
+      <thead>
+        <tr class="thead-tr">
+          <th>评论主题</th>
+          <th>评论内容</th>
+          <th style="width: 10%;">作者</th>
+          <th class="pr15">时间</th>
+          <!-- <th>操作</th> -->
+        </tr>
+      </thead>
+      <tbody class="tbody">
+        <tr ng-repeat="item in myPostMessage">
+          <td>
+            <a ng-show="!item.post.topic.product" href="#/forum/topic/[[ item.post.topic._id ]]" ng-click="readMyPostMessage(item._id)" style="width: 270px;">[[ item.post.topic.title ]]</a>
+            <a ng-show="item.post.topic.product" href="#/rank/detail/[[ item.post.topic.product.pid ]]" ng-click="readMyPostMessage(item._id)" style="width: 270px;">[[ item.post.topic.title ]]</a>
+          </td>
+          <td><span>[[ item.post.body | toText ]]</span></td>
+          <td>[[ item.post.user.name.first ]]</td>
+          <td class="pr15">[[ item.created | date: 'yyyy-MM-dd HH:mm:ss' ]]</td>
+          <!-- <td>
+            <i cancel-star class="iconfont star" data-key="[[ item._id ]]" data-type="myProducts" title="删除">&#xe623;</i>
+          </td> -->
+        </tr>
+      </tbody>
+    </table>
+    <div ng-if="myPostMessage.length == 0" style="height: 270px;line-height: 270px;text-align: center;">暂无消息</div>
+  </div>
+</div>

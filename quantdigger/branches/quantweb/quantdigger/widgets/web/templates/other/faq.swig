@@ -1,0 +1,69 @@
+{% extends "../layouts/base.swig" %}
+{% block title %}常见问题 - 小跟班{% endblock %}
+{% block keywords %}{% endblock %}
+{% block description %}{% endblock %}
+{% block footer %}{% include "../layouts/footer.swig" %}{% endblock %}
+
+{% block content %}
+<div class="o-header clearfix pt5">常见问题</div>
+<div class="o-wrap">
+  <div class="container">
+
+    <div class="of-group">
+      <h4 class="title">1.什么是组合？</h4>
+      <div class="description">
+        <p class="part">每个组合都是用户创建的一个金融产品，初始资金默认为一百万。用户在创建组合的时候可以选择要组合的对象，对象可以是自己的组合或者其它用户创建的组合。</p>
+      </div>
+    </div>
+
+    <div class="of-group">
+      <h4 class="title">2.如何创建组合？</h4>
+      <div class="description">
+        <h5 class="subtitle">a.在个人首页的我的组合选项栏中点击“创建组合”按钮；</h5>
+        <img src="/images/faq-2.a.png" alt="" style="max-width: 80%;">
+        <h5 class="subtitle">b.在弹出框中输入组合名称和描述；</h5>
+        <img src="/images/faq-2.b.png" alt="">
+        <h5 class="subtitle">c.选择要组合的对象（可选）。</h5>
+        <img src="/images/faq-2.c.1.png" alt="">
+        <img src="/images/faq-2.c.2.png" alt="">
+      </div>
+    </div>
+
+    <div class="of-group">
+      <h4 class="title">3.如何跟投？</h4>
+      <div class="description">
+        <h5 class="subtitle">跟投的方式有两种：手动跟投和自动跟投。</h5>
+        <p class="part">手动跟投：用户可在排行榜或者特定组合页面中点击“跟投”按钮，这样该组合的下单的时候会在用户的交易页面中显示，如下图：</p>
+        <img src="/images/faq-3.a.png" alt="" style="max-width: 80%;">
+        <img src="/images/faq-3.b.png" alt="" style="max-width: 80%;">
+        <p class="part">当用户收到跟投通知的时候，点击“跟投”按钮，就进入手动跟投流程。</p>
+        <img src="/images/faq-3.c.jpg" alt="" style="max-width: 30%;">
+        <p class="part">自动跟投：用户可在创建组合的时候选择跟投目标为组合对象，这样就完成了自动跟投，一个组合可跟踪多个组合。用户在创建组合的时候需选择分配给每个组合对象的资金比例，剩余的资金为该产品在交易室中的初始可用资金。</p>
+      </div>
+    </div>
+
+    <div class="of-group">
+      <h4 class="title">4.为什么新建的组合下单资金不足？</h4>
+      <div class="description">
+        <p class="part">原因是用户在创建组合的时候选择了一个或多个组合对象，并且把大部分或者全部资金都分配给它们了，剩余的初始可用资金过少，导致无法下单。</p>
+      </div>
+    </div>
+
+    <div class="of-group">
+      <h4 class="title">5.为什么我买入股票，并且盈利了，统计数据中的“交易总笔数”和“盈利笔数”为0？</h4>
+      <div class="description">
+        <p class="part">这个指标主要是为了显示盈亏比值，所以这里的每笔交易指的是“买入，然后卖出”，只有这样计算出的每笔盈亏才有意义。“交易总比数”等价于卖出的次数。</p>
+        <img src="/images/faq-5.png" alt="" style="max-width: 30%;">
+      </div>
+    </div>
+
+    <div class="of-group">
+      <h4 class="title">6.跟投背后的机制是什么？</h4>
+      <div class="description">
+        <p class="part">为了保护被跟对象的利益，手动和自动跟投信号都是在对方订单成交后发出的。手动跟投要求跟投者手工确认，意味者跟投者要在线。自动跟投无需确认，也不要求跟投者在线。</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

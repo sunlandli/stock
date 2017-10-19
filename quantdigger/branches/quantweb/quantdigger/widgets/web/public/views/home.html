@@ -1,0 +1,79 @@
+<style type="text/css" media="screen">
+  /*添加组合*/
+  .home-add-group li{
+    height: 30px;
+    padding-left: 10px;
+    padding-right: 10px;
+    line-height: 30px;
+    cursor: pointer;
+  }
+  .home-add-group li:hover{
+    background-color: #eee;
+  }
+  .home-add-all {
+    border-right: 1px solid #eee;
+  }
+</style>
+
+<div class="container">
+  <!-- 左栏 -->
+  <div class="sidebar">
+    <!-- 用户卡片 -->
+    <div class="user-box">
+      <div class="user-box-pic">
+        <a href="">
+          <img class="user-box-avatar" ng-src="[[ gUser.avatar ]]" alt="">
+        </a>
+        <h4 class="mt10">[[ gUser.name.first ]]</h4>
+        <div>
+          <!--<span>添加签名</span>-->
+          <!--<i class="iconfont">&#xe602;</i>-->
+        </div>
+      </div>
+      <div class="user-box-info clearfix">
+        <div class="left fl">
+          <span class="label">平均收益率</span><br>
+          <strong class="data">[[ gUser.trading.curAvePorfitRatio.toFixed(2)  ]]%</strong>
+        </div>
+        <div class="right fr">
+          <span class="label">排名</span><br>
+          <strong class="data">[[ gUser.trading.rank ]]</strong>
+        </div>
+      </div>
+    </div> <!-- 用户卡片 end -->
+
+    <div class="user-menu">
+      <div class="user-menu-group">
+        <h4 class="title">交易</h4>
+        <ul class="nols">
+          <li ui-sref-active="active"><a ui-sref=".trade" title="">交易总览</a></li>
+          <li><a ui-sref="room({id: '000001.SSE'})" title="">开始交易</a></li>
+        </ul>
+      </div>
+      <div class="user-menu-group">
+        <h4 class="title">社区</h4>
+        <ul class="nols">
+          <li ui-sref-active="active"><a ui-sref=".topic" title="">我的主题</a></li>
+          <li ui-sref-active="active"><a ui-sref=".post" title="">我的评论</a></li>
+          <li ui-sref-active="active">
+            <a ui-sref=".message" ng-click="getMyPostMessage('unread');" title="">
+            提到我的
+            <span ng-show="unreadCount > 0" class="count fr">[[ unreadCount ]]</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div class="user-menu-group">
+        <h4 class="title">设置</h4>
+        <ul class="nols">
+          <li ui-sref-active="active"><a ui-sref=".setting" title="">个人设置</a></li>
+        </ul>
+      </div>
+    </div>
+  </div> <!-- 左栏 end -->
+
+  <!-- 右栏 -->
+  <div class="main">
+    <div ui-view="home"></div>
+  </div> <!-- 右栏 end -->
+</div>

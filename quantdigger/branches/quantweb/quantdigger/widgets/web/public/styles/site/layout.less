@@ -1,0 +1,128 @@
+// #header {
+// 	margin-top: 30px;
+// }
+
+// #footer {
+// 	margin-top: 30px;
+// 	border-top: 1px solid #ccc;
+// 	padding-top: 30px;
+// 	color: #ccc;
+// }
+
+// .gallery-image img {
+//     display: block;
+//     max-width: 100%;
+//     height: auto;
+// }
+
+.public-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9998;
+    width: 100%;
+    min-width: 1110px;
+    height: 70px;
+    background-color: rgba(255,255,255,1);
+    // box-shadow: 0 3px 8px #ccc;
+    border-bottom: 1px solid #eee;
+    .brand a {
+        font-size: 28px;
+        line-height: 70px;
+        color: #6cf;
+    }
+    .navbar > li {
+        display: inline-block;
+        line-height: 70px;
+        &.active > a {
+            background-color: #6cf;
+            color: #fff;
+        }
+        > a {
+            display: block;
+            padding-left: 15px;
+            padding-right: 15px;
+            color: #333;
+            &:hover {
+                background-color: #6cf;
+                color: #fff;
+            }
+        }
+    }
+    .sreach-form {
+        position: relative;
+        .input-search {
+            display: inline-block;
+            width: 200px;
+            height: 30px;
+            border-radius: 2px;
+            border: none;
+            background-color: rgba(0,0,0,.1);
+            color: #fff;
+            // padding: 6px 10px;
+            line-height: 30px;
+        }
+        .btn-search {
+            position: absolute;
+            top: 50%;
+            right: 0;
+            width: 30px;
+            height: 30px;
+            margin-top: -14px;
+            background: none;
+            border: none;
+            color: #ccc;
+            font-size: 16px;
+            padding: 0;
+            line-height: 30px;
+        }
+    }
+    .user {
+        position: relative;
+        float: right;
+        margin-right: 0;
+        > a {
+            img {
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                vertical-align: middle;
+            }
+            > span,
+            > i {
+                color: #333;
+                vertical-align: middle;
+            }
+        }
+        ul.dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 70px;
+            right: 0;
+            z-index: 888;
+            // width: 100%;
+            min-width: 120px;
+            background-color: #fff;
+            border: 1px solid #eee;
+            li {
+                a {
+                    display: block;
+                    width: 100%;
+                    padding: 10px 15px;
+                    line-height: 30px;
+                    &:hover {
+                        background-color: #eee;
+                    }
+                }
+                .iconfont {
+                    font-size:18px;
+                }
+            }
+        } // dropdown-menu
+        &:hover {
+            ul.dropdown-menu {
+                display: block;
+            }
+        }
+    }
+}

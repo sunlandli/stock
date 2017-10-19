@@ -1,0 +1,619 @@
+<div class="container">
+
+<div id="roomBody">
+  <div class="navbar-stock u-navbar-hide" user-header>
+    <div class="container clearfix">
+      <div class="stock-name dib">
+        <h4 class="name">
+          [[ basicInfo.name ]]
+          <small class="symbol">
+            ([[ basicInfo.symbol ]])
+            <!-- <span class="tag" ng-repeat="t in basicInfo.tags">[[ t ]]</span> -->
+          </small>
+        </h4>
+        <div class="trend" ng-class="{green: basicInfo.info.diff < 0, red: basicInfo.info.diff > 0}">
+          <span class="trend-data">
+            [[ basicInfo.info.diff ]]
+            <i class="iconfont arrow" ng-if="basicInfo.info.diff < 0">&#xe613;</i>
+            <i class="iconfont arrow" ng-if="basicInfo.info.diff > 0">&#xe616;</i>
+          </span>
+          <span class="trend-percent">[[ basicInfo.info.change ]]</span>
+        </div>
+      </div>
+      <div class="stock-info dib ml15">
+        <table class="table">
+          <tbody>
+            <tr>
+              <td>最新价：<strong ng-class="{green: basicInfo.info.price < basicInfo.info.preClose, red: basicInfo.info.price > basicInfo.info.preClose}">[[ basicInfo.info.price ]]</strong></td>
+              <td>最高价：<strong ng-class="{green: basicInfo.info.high < basicInfo.info.preClose, red: basicInfo.info.high > basicInfo.info.preClose}">[[ basicInfo.info.high ]]</strong></td>
+              <td>开盘价：<strong ng-class="{green: basicInfo.info.open < basicInfo.info.preClose, red: basicInfo.info.open > basicInfo.info.preClose}">[[ basicInfo.info.open ]]</strong></td>
+              <td>成交量：<strong>[[ basicInfo.info.volume | unitFormat ]]</strong></td>
+              <!-- <td>振  幅：<strong>[[ basicInfo.info.zf ]]%</strong></td> -->
+              <!-- <td>量  比：<strong>[[ basicInfo.info.e ]]</strong></td> -->
+              <!-- <td>平均价：<strong class="color-down">[[ basicInfo.info.pjj ]]</strong></td> -->
+            </tr>
+            <tr>
+              <td>昨收价：<strong>[[ basicInfo.info.preClose ]]</strong></td>
+              <td>最低价：<strong ng-class="{green: basicInfo.info.low < basicInfo.info.preClose, red: basicInfo.info.low > basicInfo.info.preClose}">[[ basicInfo.info.low ]]</strong></td>
+              <td>成交额：<strong>[[ basicInfo.info.totalPrice | unitFormat ]]</strong></td>
+              <td></td>
+              <!-- <td>委  比：<strong>[[ basicInfo.info.k ]]%</strong></td> -->
+              <!-- <td>市盈率：<strong>[[ basicInfo.info.l ]]</strong></td> -->
+              <!-- <td>换手率：<strong>[[ basicInfo.info.m ]]%</strong></td> -->
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="dib fr" style="padding-top: 22px;position: relative;margin-right: 45px;">
+          <angucomplete id="searchStock"
+                        placeholder="搜索股票"
+                        pause="100"
+                        selectedobject="selectedStock"
+                        localdata="abc"
+                        callback="redirect(r)"
+                        titlefield="code,name"
+                        searchfields="code,pinyin"
+                        minlength="3"
+                        inputclass="form-control input-search form-control-small"
+                        matchclass="isMatch"/>
+        <i class="iconfont icon-search">&#xe610;</i>
+      </div>
+    </div>
+  </div>
+
+  <div class="stock-infobar">
+    <div class="stock-infobar-top">
+      <h4 class="name">
+        [[ basicInfo.name ]]
+        <small class="symbol">
+          ([[ basicInfo.symbol ]])
+          <!-- <span class="tag" ng-repeat="t in basicInfo.tags">[[ t ]]</span> -->
+        </small>
+      </h4>
+    </div>
+    <div class="stock-infobar-bottom clearfix">
+      <div class="stock-info-trend dib">
+        <div class="time">
+          <span>[[ basicInfo.date ]](北京)</span>
+          <span>[[ basicInfo.isClose ]]</span>
+        </div>
+        <div class="trend" ng-class="{green: basicInfo.info.diff < 0, red: basicInfo.info.diff > 0}">
+          <span class="trend-data">
+            [[ basicInfo.info.diff ]]
+            <i class="iconfont arrow" ng-if="basicInfo.info.diff < 0">&#xe613;</i>
+            <i class="iconfont arrow" ng-if="basicInfo.info.diff > 0">&#xe616;</i>
+          </span>
+          <span class="trend-percent">[[ basicInfo.info.change ]]</span>
+        </div>
+      </div>
+      <div class="stock-info-detail dib ml15">
+        <table class="table">
+          <tbody>
+            <tr>
+              <td>最新价：<strong ng-class="{green: basicInfo.info.price < basicInfo.info.preClose, red: basicInfo.info.price > basicInfo.info.preClose}">[[ basicInfo.info.price ]]</strong></td>
+              <td>最高价：<strong ng-class="{green: basicInfo.info.high < basicInfo.info.preClose, red: basicInfo.info.high > basicInfo.info.preClose}">[[ basicInfo.info.high ]]</strong></td>
+              <td>开盘价：<strong ng-class="{green: basicInfo.info.open < basicInfo.info.preClose, red: basicInfo.info.open > basicInfo.info.preClose}">[[ basicInfo.info.open ]]</strong></td>
+              <td>成交量：<strong>[[ basicInfo.info.volume | unitFormat ]]</strong></td>
+              <!-- <td>振  幅：<strong>[[ basicInfo.info.zf ]]%</strong></td> -->
+              <!-- <td>量  比：<strong>[[ basicInfo.info.e ]]</strong></td> -->
+              <!-- <td>平均价：<strong class="color-down">[[ basicInfo.info.pjj ]]</strong></td> -->
+            </tr>
+            <tr>
+              <td>昨收价：<strong>[[ basicInfo.info.preClose ]]</strong></td>
+              <td>最低价：<strong ng-class="{green: basicInfo.info.low < basicInfo.info.preClose, red: basicInfo.info.low > basicInfo.info.preClose}">[[ basicInfo.info.low ]]</strong></td>
+              <td>成交额：<strong>[[ basicInfo.info.totalPrice | unitFormat ]]</strong></td>
+              <!-- <td>委  比：<strong>[[ basicInfo.info.k ]]%</strong></td> -->
+              <!-- <td>市盈率：<strong>[[ basicInfo.info.l ]]</strong></td> -->
+              <!-- <td>换手率：<strong>[[ basicInfo.info.m ]]%</strong></td> -->
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+      <div class="content">
+        <div class="n-body">
+          <div class="chart-left">
+            <div class="stock-chart-legend">
+              <ul class="list clearfix nols" >
+                <li class="item" ng-class="{active: legend == '1.RealTime'}" ng-click="switchPeriod('1.RealTime'); ">分时</li>
+                <li class="item" ng-class="{active: legend == '1.Minute'}" ng-click="switchPeriod('1.Minute'); ">1分钟</li>
+                <li class="item" ng-class="{active: legend == '3.Minute'}" ng-click="switchPeriod('3.Minute'); ">3分钟</li>
+                <li class="item" ng-class="{active: legend == '5.Minute'}" ng-click="switchPeriod('5.Minute'); ">5分钟</li>
+                <li class="item" ng-class="{active: legend == '10.Minute'}" ng-click="switchPeriod('10.Minute'); ">10分钟</li>
+                <li class="item" ng-class="{active: legend == '15.Minute'}" ng-click="switchPeriod('15.Minute'); ">15分钟</li>
+                <li class="item" ng-class="{active: legend == '30.Minute'}" ng-click="switchPeriod('30.Minute'); ">30分钟</li>
+                <li class="item" ng-class="{active: legend == '60.Minute'}" ng-click="switchPeriod('60.Minute'); ">60分钟</li>
+                <li class="item" ng-class="{active: legend == '1.Day' }" ng-click="switchPeriod('1.Day'); ">日</li>
+              </ul>
+            </div>
+            <!-- k线容器 -->
+            <div id="myChart"></div>
+            <!-- k线容器 end -->
+            <div class="chart-table clearfix">
+                <div class="table-left">
+                    <div class="menu">
+                        <ul class="table-switch nols clearfix" ng-init="table=1">
+                            <li ng-class="{active: table==1}" ng-click="table=1">快捷</li>
+                            <li ng-class="{active: table==2}" ng-click="table=2">当日委托</li>
+                            <li ng-class="{active: table==3}" ng-click="table=3">当日成交</li>
+                            <li ng-class="{active: table==4}" ng-click="table=4">持仓信息</li>
+                        </ul>
+                    </div>
+                    <div class="table-box clearfix">
+
+                      <div class="clearfix" ng-show="table==1" style="width: 100%;">
+                        <!--快捷报单-->
+                        <div class="fl" style="height: 151px; overflow-y: auto;">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>名称</th>
+                                        <th ng-if="!curContract.isStock">多空</th>
+                                        <th>动作</th>
+                                        <th>成交/总数</th>
+                                        <th>报单价格</th>
+                                        <th>状态</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in orderShow">
+                                        <td>[[ item.name ]]</td>
+                                        <td ng-if="!curContract.isStock" >[[ item.direction ]]</td>
+                                        <td>[[ item.action ]]</td>
+                                        <td ng-if="item.name">[[ item._filledQuantity ]] / [[item.quantity]]</td>
+                                        <td ng-if="!item.name"></td>
+                                        <td>[[ item.price ]]</td>
+                                        <td>[[ item.status ]]</td>
+                                        <td>
+<button class="btn-cancel" type="button" ng-if="item.name && (item.state == 0 || item.state == 4)" ng-click="cancelOrder(item.orderNo)">撤单</button>
+<!--<button class="btn-cancel" type="button" ng-else>无</button>-->
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- end-->
+                          <!--快捷持仓-->
+                          <div class="fr" style="height: 151px; overflow-y: auto;">
+                            <table>
+                                <thead>
+                                  <tr>
+                                    <th>名称</th>
+                                    <th ng-if="!curContract.isStock">多空</th>
+                                    <th>持仓</th>
+                                    <!-- <th>可平</th> -->
+                                    <th>盈亏</th>
+                                    <th>成本价</th>
+                                    <th>可平数量</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr ng-repeat="item in positionShow">
+                                    <td>[[ item.name ]]</td>
+                                    <td ng-if="!curContract.isStock" >[[ item.direction ]]</td>
+                                    <td>[[ item.quantity ]]</td>
+                                    <td>[[ item.profit ]]</td>
+                                    <!--<td>[[ item.kePing ]]</td>-->
+                                    <td>[[ item.cost ]]</td>
+                                    <td ng-if="item.name">[[ item.quantity - item.todayQuantity]]</td>
+                                    <td ng-if="!item.name"></td>
+                                  </tr>
+                                </tbody>
+                            </table>
+                          </div>
+                        <!--end-->
+                      </div>
+
+                      <!--报单-->
+                      <div ng-show="table==2" style="width: 100%;height: 151px; overflow-y: auto;">
+                        <table style="/*min-width: 1000px;*/">
+                            <thead>
+                                <tr>
+                                    <th>名称</th>
+                                    <th>报单时间</th>
+                                    <th ng-if="!curContract.isStock">多空</th>
+                                    <th>动作</th>
+                                    <th>报单价格</th>
+                                    <th>成交/总数</th>
+                                    <th>报单编号</th>
+                                    <th>状态</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="item in orderToday">
+                                    <td>[[ item.name ]]</td>
+                                    <td>[[ item.datetime ]]</td>
+                                    <td ng-if="!curContract.isStock" >[[ item.direction ]]</td>
+                                    <td>[[ item.action ]]</td>
+                                    <td>[[ item.price ]]</td>
+                                    <td ng-if="item.action" >[[ item._filledQuantity ]]/[[ item.quantity ]]</td>
+                                    <td ng-if="!item.action"></td>
+                                    <td>[[ item.orderNo ]]</td>
+                                        <td>[[ item.status ]]</td>
+                                        <td>
+<button class="btn-cancel" type="button" ng-if="item.name && (item.state == 0 || item.state == 4)" ng-click="cancelOrder(item.orderNo)">撤单</button>
+<!--<button class="btn-cancel" type="button" ng-else>无</button>-->
+                                        </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                      </div>
+
+                      <!--成交-->
+                      <div ng-show="table==3" style="width: 100%;height: 151px; overflow-y: auto;">
+                        <table style="/*min-width: 1000px;*/">
+                            <thead>
+                                <tr>
+                                    <th>名称</th>
+                                    <th>成交时间</th>
+                                    <th>报单时间</th>
+                                    <th ng-if="!curContract.isStock" >多空</th>
+                                    <th>动作</th>
+                                    <th>成交价</th>
+                                    <th>成交手数</th>
+                                    <!--<th>报单价格</th>-->
+                                    <th>手续费</th>
+                                    <th>报单编号</th>
+                                    <th>成交编号</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="item in transToday">
+                                    <td>[[ item.name ]]</td>
+                                    <td>[[ item.datetime ]]</td>
+                                    <td>[[ item.orderTime ]]</td>
+                                    <td ng-if="!curContract.isStock" >[[ item.direction ]]</td>
+                                    <td>[[ item.action ]]</td>
+                                    <td>[[ item.price ]]</td>
+                                    <td>[[ item.quantity ]]</td>
+                                    <!--<td>[[ item.orderPrice ]]</td>-->
+                                    <td>[[ item.commission ]]</td>
+                                    <td>[[ item.orderNo ]]</td>
+                                    <td>[[ item.transNo ]]</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                      </div>
+
+                      <!--持仓-->
+                      <div ng-show="table==4" style="width: 100%;height: 151px; overflow-y: auto;">
+                        <table style="min-width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th>名称</th>
+                                    <th ng-if="!curContract.isStock" >多空</th>
+                                    <th>总持仓</th>
+                                    <!--<th>可平量</th>-->
+                                    <th>持仓均价</th>
+                                    <th>持仓盈亏</th>
+                                    <th ng-if="!curContract.isStock">占用保证金</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="item in positions">
+                                    <td>[[ item.name ]]</td>
+                                    <td ng-if="!curContract.isStock" >[[ item.direction ]]</td>
+                                    <td>[[ item.quantity ]]</td>
+                                    <!--<td>[[ item.kePing ]]</td>-->
+                                    <td>[[ item.cost ]]</td>
+                                    <td>[[ item.profit ]]</td>
+                                    <td ng-if="!curContract.isStock">[[ item.margin ]]</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                      </div>
+
+                    </div>
+                </div>
+            </div>
+          </div>
+          <div class="chart-right">
+            <div class="content">
+              <!-- 盘比 -->
+              <div class="chart-buy-sale" ng-init="isHideBuy=false;">
+                <div class="bd clearfix">
+                  <div class="bd-buy fl" style="width: 50%">委比<b class="fr">[[ bidPercent ]]<span ng-if="bidPercent != '-'">%</span></b></div>
+                  <div class="bd-sale fl" style="width: 50%">委差<b class="fr">[[ sellPercent ]]</b></div>
+                </div>
+                <div class="ft clearfix" style="min-height: 220px;" ng-hide="isHideBuy">
+                  <ul class="ft-item ft-sale-list fl nols">
+                    <li ng-repeat="item in sells | orderBy: '-'">
+                      <span class="ft-sort">卖[[ ['五','四','三','二','一'][$index] ]]</span>
+                      <span class="data-one green">[[ item.price ]]</span>
+                      <span class="data-two fr">[[ item.volume ]]</span>
+                    </li>
+                  </ul>
+                  <ul class="ft-item ft-buy-list fl nols">
+                    <li ng-repeat="item in bids">
+                      <span class="ft-sort">买[[ ['一','二','三','四','五'][$index] ]]</span>
+                      <span class="data-one red">[[ item.price ]]</span>
+                      <span class="data-two fr">[[ item.volume ]]</span>
+                    </li>
+                  </ul>
+                </div>
+                <div class="arrow-up tc" ng-click="isHideBuy = !isHideBuy">
+                  <i class="iconfont" ng-if="!isHideBuy">&#xe636;</i>
+                  <i class="iconfont" ng-if="isHideBuy">&#xe633;</i>
+                </div>
+              </div><!-- 盘比 -->
+              <!-- 跟单 -->
+              <div>
+                <ul class="latest-order-list nols" ng-class="{h288: isHideBuy}">
+                  <li ng-repeat= "item in followList">
+                    <div>
+                      <b class="name mr10">[[ item.productName ]]</b>
+                      <span class="time">[[ item.name ]]</span>
+                      <span class="time">[[ item.datetime ]]</span>
+                    </div>
+                    <div>
+                      <span class="type mr10">[[ item.side ]]</span>
+                      <span class="mr15">价格：<b class="price">[[ item.price ]]</b></span>
+                      <span>手数：<b class="share">[[ item.quantity ]]</b></span>
+                      <button class="btn-order fr" type="button" ng-click="showFollowDlg(item);">[[ item.symbol ]]</button>
+                      <button ng-if="item.auto" class="btn-order fr" type="button" >已跟 </button>
+                      <button ng-if="!item.auto" class="btn-order fr"
+                        type="button" ng-click="showFollowDlg(item);" >未跟 </button>
+                    </div>
+                  </li>
+                </ul>
+              </div> <!-- 跟单 -->
+              <!-- 下单 -->
+              <div class="make-order-box" ng-init="order.sideBool = true; order.directionBool = true; isKP = 'KAI' ">
+                <!-- 账号相关 -->
+                <div class="pl10 pt5 f12" style="position: relative;">
+                  <span>账号：</span>
+                  <a ng-show="myAccounts.length != 0">[[ curAccount.name ]]</a>
+                  <a ng-show="myAccounts.length == 0" ui-sref="index" style="color: #6cf;">+创建账号</a>
+                  <span class="ml10 cp iconfont" ng-show="myAccounts.length != 0" title="切换账号" ng-click="showChildAcc = true;">&#xe630;</span>
+                  <div class="dropdown">
+                    <ol my-menu class="room-contract-list nobl nols" ng-show="showChildAcc" style="left: 0;z-index: 2000;width: 100%;height: 200px;top: -206px;box-shadow: 0 0 12px #ccc;">
+                      <li ng-repeat="item in myAccounts" ng-click="setDefaultAccount(item)" style="width: 100%;">[[item.name]]</li>
+                    </ol>
+                  </div>
+                </div>
+                <div class="capital">
+                  <span class="rights">权益：<b>[[ curAccount.equity | unitFormat ]]</b></span>
+                  <span class="balance tr">资金：<b>[[ curAccount.cash | unitFormat ]]</b></span>
+                </div> <!-- 账号相关 end -->
+
+                <!-- 期货下单 -->
+                <div class="order-type clearfix mt10" ng-show="!curContract.isStock">
+                  <label class="btn-mm" ng-class="{active: order.directionBool}" for="oBuy">[[ order.directionBool ? '买多' : '卖空']]</label>
+                  <input id="oBuy" class="hide" type="checkbox" ng-model="order.directionBool">
+
+                  <label class="btn-kp fr" ng-class="{active: order.sideBool}" for="oKP">[[ order.sideBool ? '开仓' : '平仓']]</label>
+                  <input id="oKP" class="hide" type="checkbox" ng-model="order.sideBool">
+                </div>  <!-- 期货下单 end -->
+
+                <!-- 股票下单 -->
+                <div class="order-type clearfix mt10" ng-show="curContract.isStock">
+                  <label class="btn-buy" ng-class="{active: isKP == 'KAI'}"
+                    for="oKai" ng-click="isKP = 'KAI'; order.sideBool = true; setTradePrice(true);change = 0;">买入</label>
+                  <input id="oKai" class="hide" type="radio" name="side" value="KAI">
+
+                  <label class="btn-sale fr" ng-class="{active: isKP == 'PING'}"
+                    for="oPing" ng-click="isKP = 'PING'; order.sideBool = false; setTradePrice(false);change = 1;">卖出</label>
+                  <input id="oPing" class="hide" type="radio" name="side" value="PING">
+                </div> <!-- 股票下单 end -->
+
+                <div class="order-contract pl10 pr10 mb5 clearfix">
+                  <span>证券</span>
+                  <div class="fr">
+                    <angucomplete id="searchStock"
+                                  placeholder="[[ toTradeContractName ]]"
+                                  pause="100"
+                                  selectedobject="selectedCBD"
+                                  localdata="ccc"
+                                  callback="selectContract(r)"
+                                  titlefield="code,name"
+                                  searchfields="code,pinyin"
+                                  minlength="3"
+                                  inputclass="sct"
+                                  matchclass="isMatch"/>
+                  </div>
+                </div>
+                <form class="pl10 pr10 clearfix" name="makeOrder" ng-submit="insertOrder(undefined, undefined, order, false)">
+                  <div class="fl" style="width: 70%;">
+                    <div class="order-price order-group clearfix">
+                        <span>价格</span>
+                        <input id="price" name="price" class="input-price" ng-pattern="/(^[1-9]((\d+)?(\.\d{1,2})?)$)|(^0\.(\d{1,2})$)|(^0$)/" type="text" ng-model="order.price" required>
+                        <p class="f12" ng-show="makeOrder.price.$dirty && makeOrder.price.$invalid" style="color: #f90;">请输入有效数值</p>
+                    </div>
+                    <div class="order-share order-group mt5 clearfix">
+                        <span ng-show="!curContract.isStock">手数</span>
+                        <span ng-show="curContract.isStock">股数</span>
+
+                        <input id="share" class="input-share" type="text" name="share" ng-model="order.quantity" ng-pattern="rgx" placeholder="[[ ['可买','可卖'][change] ]][[ tradableQuantity ]]" required>
+
+                        <p class="f12" ng-show="makeOrder.share.$dirty && makeOrder.share.$invalid" >
+                          <span ng-show="curContract.isStock" style="color: #f90;">请输入 100 的整数倍</span>
+                          <span ng-show="!curContract.isStock" style="color: #f90;">请输入大于 0 的整数</span>
+                        </p>
+                    </div>
+                  </div>
+                  <div class="fl order-submit">
+                    <button id="btnOrder" class="btn-order tc" type="submit" ng-disabled="makeOrder.$invalid">下 单</button>
+                  </div>
+                </form>
+              </div><!-- 下单 end -->
+            </div>
+          </div>
+        </div>
+
+      </div>
+  </div>
+</div>
+</div>
+
+<!-- 菜单 -->
+<div class="room-menu-box hide">
+  <ul class="room-menu-list nols">
+    <li class="item" ng-init="showList=flase">
+      <a href="javascript:" ng-click="showList=!showList" style="background-color: #6cf">账号</a>
+      <ol my-menu class="room-contract-list nobl nols" ng-show="showList">
+        <!-- <li class="dib" ng-init="aa=1" ng-click="aa=1" style="width: 48%;">交易</li> -->
+        <!-- <li class="dib" ng-click="aa=2" style="width: 48%;">组合</li> -->
+        <ul class="nols">
+          <li ng-repeat="item in myAccounts" ng-class="{active: item.isDefault}">
+            <div>
+              <strong>[[item.name]]</strong>
+              <span class="fr">
+                <!-- <a href="javascript:" ng-if="item.loginId=='null'" ng-click="login(item)">登录|</a> -->
+                <!-- <a href="javascript:" ng-if="item.loginId!='null'" ng-click="logout(item)">退出|</a> -->
+                <a href="javascript:" style="" ng-if="item.isDefault==true" ng-click="setDefaultAccount(item)">当前</a>
+                <a href="javascript:" style="color: #6cf;" ng-if="item.isDefault==false" ng-click="setDefaultAccount(item)">切换</a>
+              </span>
+            </div>
+            <div class="status pt10">
+              <span class="current">当前权益：[[ item.captial.equity ]]</span>
+              <span class="rest">剩余资金：[[ item.captial.cash ]]</span>
+            </div>
+          </li>
+          <!-- <li class="tc" ng-show="myAccounts.length == 0" ng-click="showForm = 3;showModal = true;" style="width: 280px;"> -->
+          <li class="tc" ng-show="myAccounts.length == 0" ui-sref="index" style="width: 280px;">
+            还没有账号？
+            <a href="" title="" style="color: #6cf;">创建一个吧</a>
+          </li>
+        </ul>
+        <!-- <ul class="nols" ng-show="aa==2">
+          <li><a href="">账号1</a></li>
+          <li><a href="">账号2</a></li>
+          <li><a href="">账号3</a></li>
+          <li><a href="">账号4</a></li>
+          <li><a href="">账号5</a></li>
+        </ul> -->
+      </ol>
+    </li>
+    <!-- <li class="item"><a ui-sref="abc" style="background-color: #9c3">K线</a></li> -->
+    <!-- <li class="item"><a href="javascript:alert('正在努力开发中，尽请期待。。。')" style="background-color: #ccc;">聊天</a></li> -->
+  </ul>
+</div> <!-- 菜单 end -->
+
+<!-- 跟投对话框 -->
+<div class="modal" ng-show="showModal">
+  <div class="dialog create-product-box">
+    <div class="dialog-hd">
+      <h4 class="mb0">
+        <span ng-show="showForm == 1" >跟投</span>
+        <!-- <span ng-show="showForm == 2">选择</span> -->
+        <span ng-show="showForm == 3">创建</span>
+        <i class="iconfont cp fr" ng-click="showModal=false">&#xe623;</i>
+      </h4>
+    </div>
+    <div class="dialog-bd" ng-init="showForm = 1">
+      <form ng-show="showForm == 1" id="gT" ng-submit="followInvest(eee); showModal=false">
+        <div class="form-group mb30">
+          <h3>[[ eee.productName ]]<small class="ml30" style="color: #999;">[[ eee.datetime ]]</small></h3>
+          <div style="font-size: 12px;">
+            <b class="" style="color: #f90;">[[ eee.name ]]</b>
+            <b class="" style="color: #f90;">[[ eee.side ]]</b>
+            <span class="ml20">价格：<b class="" style="color: red">[[ eee.price ]]</b></span>
+            <span class="ml20">手数：<b class="" style="color: green">[[ eee.quantity ]]</b></span>
+          </div>
+        </div>
+         <div class="form-group f13 mb10" ng-init="eee.acc=acc">
+           <!--<label for="">当前账号:</label>-->
+          <!--<select class="input-text dib" name="" ng-model="c.type"
+          <!--style="width: 85%;vertical-align: middle;" no-multiple>-->
+          <!--<option value="组合007" ng-selected="true">组合007</option>-->
+          <!--<option value="组合008">组合008</option>-->
+          <!--<option value="组合009">组合009</option>-->
+          <!--</select>-->
+          <!-- <span class="ml10 cp" ng-click="showForm = 2" style="color: #999;">切换</span> -->
+        </div>
+      </form>
+      <!-- <form ng-show="showForm == 2" id="qH" ng-submit="qH(c)">
+         <div class="form-group mb10" ng-init="c.type='组合007'">
+          <label for="">选择账号:</label>
+          <select class="input-text dib" name="" ng-model="c.type" style="width: 85%;vertical-align: middle;" no-multiple>
+            <option value="组合007" ng-selected="true">组合007</option>
+            <option value="组合008">组合008</option>
+            <option value="组合009">组合009</option>
+          </select>
+        </div>
+      </form> -->
+      <form ng-show="showForm == 3" id="cJ" ng-submit="cJ(data)">
+        <div class="form-group mb20">
+          <!-- <label for="">账号类型</label> -->
+          <div class="mt5 tc clearfix" ng-init="isSelect = 1">
+            <label class="btn-radio fl" ng-class="{active: isSelect == 1}" ng-click="isSelect = 1" ng-init="data.isFollow = 'false'">
+              <input class="hide" type="radio" name="isFollow" ng-model="data.isFollow" value="false" ng-checked="true">
+              产品账号
+            </label>
+            <label class="btn-radio fr" ng-class="{active: isSelect == 2}" ng-click="isSelect = 2">
+              <input class="hide" type="radio" name="isFollow" ng-model="data.isFollow" value="true">
+              跟投账号
+            </label>
+          </div>
+        </div>
+         <div class="form-group mb10" ng-init="data.type='stock'">
+          <label for="">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型</label>
+          <select class="input-text dib" name="" ng-model="data.type" style="width: 85%;vertical-align: middle;" no-multiple>
+            <option value="stock" ng-selected="true">股票</option>
+            <option value="future">期货</option>
+          </select>
+        </div>
+        <div class="form-group mb10">
+          <label for="">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称</label>
+          <input class="input-text" type="text" name="name" ng-model="data.name" placeholder="" required>
+        </div>
+        <div class="form-group mb10">
+          <label for="">推荐理由</label>
+          <textarea class="input-text textarea" name="description" ng-model="data.description" placeholder=""required></textarea>
+        </div>
+        <div class="form-group mb10">
+        </div>
+        <div class="form-group mb10 clearfix">
+          <div class="group-a fl">
+            <label for="" style="width: 33%;">初始资金</label>
+            <input class="input-text" type="text" name="initEquity" ng-init="data.initEquity='1000000'" ng-model="data.initEquity"  style="width: 67%;" required>
+          </div>
+          <div class="group-b fr">
+            <div ng-if="data.type=='stock'">
+              <label for="" style="width: 33%;">股票佣金</label>
+              <input class="input-text" type="text" name="initEquity" ng-init="data.sCommission='0.003%'" ng-model="data.sCommission" style="width: 67%;">
+            </div>
+            <div ng-if="data.type=='future'">
+              <label for="" style="width: 33%;">期货佣金</label>
+              <input class="input-text" type="text" name="initEquity" ng-init="data.fCommission='0.01%'" ng-model="data.fCommission" style="width: 67%;">
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <button type="button" ng-if="isSelect == 2" style="border: none; font-size:14px; color: #fff;background-color: #69c;height: 30px;border-radius: 2px;">添加子帐号</button>
+        </div>
+      </form>
+    </div>
+    <div class="dialog-ft tc">
+      <div ng-show="showForm == 1">
+        <button class="btn-create" type="submit" form="gT">跟投</button>
+        <a class="ml30" href="" ng-click="showForm = 3">创 建</a>
+      </div>
+     <!--  <div ng-show="showForm == 2">
+        <button class="btn-create dib" type="submit" form="qH">切换</button>
+        <a class="ml30" href="" ng-click="showForm = 1">返 回</a>
+      </div> -->
+      <div ng-show="showForm == 3">
+        <button class="btn-create dib" type="submit" form="cJ">创建</button>
+        <a class="ml30" href="" ng-click="showForm = 1">返 回</a>
+      </div>
+    </div>
+  </div>
+</div><!-- 跟投对话框 end -->
+
+
+<script>
+  // $(function() {
+  //   (function() {
+  //     var wHeight = $(window).innerHeight();
+  //     $('#layout').css({'min-height': 0, 'height': wHeight+48, 'overflow': 'hidden'});
+  //     console.log('浏览窗口高度：'+ wHeight);
+  //     wHeight = undefined;
+  //   })();
+  // });
+</script>

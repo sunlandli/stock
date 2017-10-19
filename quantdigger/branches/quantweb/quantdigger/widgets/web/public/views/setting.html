@@ -1,0 +1,255 @@
+<div class="st-menu fl">
+  <div class="st-user p10">
+    <img class="currentAvatar" src="[[ user.avatar ]]" width="36" height="36" alt="">
+    <b class="ml10">[[ user.username ]]</b>
+  </div>
+  <ul class="st-menu-list nols" ng-init="showForm = 1">
+    <li ng-class="{active: showForm == 1}" ng-click="showForm = 1">头像设置</li>
+    <li ng-class="{active: showForm == 2}" ng-click="showForm = 2;getMyProfile();">个人资料</li>
+    <li ng-class="{active: showForm == 3}" ng-click="showForm = 3">安全设置</li>
+    <!-- <li ng-class="{active: showForm == 4}" ng-click="showForm = 4">注销账号</li> -->
+  </ul>
+</div>
+<div class="st-content fl">
+
+  <div class="st-setting-avatar" ng-show="showForm == 1">
+    <h4 class="st-title fn pl10">头像设置</h4>
+    <div class="pl20 pr20 clearfix">
+      <div class="st-set-avatar fl" style="width: 400px;">
+        <!-- 截图选框 -->
+        <div id="cropAvatar" style="width: 350px;height: 350px;">
+          <img id="avatarCrop" src="/images/avatar-crop.jpg" alt="" width="350" height="350">
+        </div><!-- 截图选框 end -->
+
+        <div id="uploader" class="mt20">
+          <!--用来存放文件信息-->
+          <!-- <div id="thelist" class="uploader-list"></div> -->
+          <div class="btns tc">
+            <div id="picker" class="dib">选择文件</div>
+            <!-- <button id="ctlBtn" class="btn btn-default">开始上传</button> -->
+            <div id="setAvatar" class="btn-set-avatar" style="display: none;">保存</div>
+          </div>
+        </div>
+      </div>
+      <div class="st-current-avatar fr">
+        <img class="currentAvatar" ng-src="[[ gUser.avatar ]]" alt="">
+      </div>
+    </div>
+    <script>
+      $(document).ready(function() {
+        var uploader = WebUploader.create({
+            // thumb: {
+              width: 350,
+              height: 350,
+
+            //   // 是否允许裁剪。
+            //   crop: true,
+
+            //   // 是否允许放大，如果想要生成小图的时候不失真，此选项应该设置为false.
+            //   allowMagnify: true,
+
+            //   // 为空的话则保留原有图片格式。
+            //   // 否则强制转换成指定的类型。
+            //   type: 'image/jpeg'
+            // },
+
+            accept: {
+              title: 'Images',
+              extensions: 'gif,jpg,jpeg,bmp,png',
+              mimeTypes: 'image/*'
+            },
+
+            // 选完文件后，是否自动上传。
+            auto: true,
+
+            // swf文件路径
+            swf: '/javascripts/libs/webuploader-0.1.5/Uploader.swf',
+
+            // 文件接收服务端。
+            server: '/api/upload/',
+
+            // 选择文件的按钮。可选。
+            // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+            pick: '#picker',
+
+            // 不压缩image, 默认如果是jpeg，文件上传前会压缩一把再上传！
+            resize: false
+        });
+        // 当有文件被添加进队列的时候
+        // uploader.on( 'fileQueued', function( file ) {
+        //     $('#thelist').append( '<div id="' + file.id + '" class="item">' +
+        //         '<h4 class="info">' + file.name + '</h4>' +
+        //         '<p class="state">等待上传...</p>' +
+        //     '</div>' );
+        // });
+        // 文件上传过程中创建进度条实时显示。
+        // uploader.on( 'uploadProgress', function( file, percentage ) {
+        //     var $li = $( '#'+file.id ),
+        //         $percent = $li.find('.progress .progress-bar');
+
+        //     // 避免重复创建
+        //     if ( !$percent.length ) {
+        //         $percent = $('<div class="progress progress-striped active">' +
+        //           '<div class="progress-bar" role="progressbar" style="width: 0%">' +
+        //           '</div>' +
+        //         '</div>').appendTo( $li ).find('.progress-bar');
+        //     }
+
+        //     $li.find('p.state').text('上传中');
+
+        //     $percent.css( 'width', percentage * 100 + '%' );
+        // });
+        uploader.on( 'uploadSuccess', function( file, res ) {
+            console.log('上传成功');
+            console.log(res);
+            resImg = res.data;
+            jcrop_api.setImage('/temp/' + resImg.name);
+            jcrop_api.setSelect([50, 50, 300, 300]);
+            $('#avatarCrop').attr('src', '/temp/' + resImg.name);
+            // $('#'+file.id ).find('p.state').text('已上传');
+            $('#cropAvatar').show();
+            $('#setAvatar').show();
+        });
+
+        uploader.on( 'uploadError', function( file ) {
+            console.log('上传失败');
+            $( '#'+file.id ).find('p.state').text('上传出错');
+        });
+
+        uploader.on( 'uploadComplete', function( file ) {
+            console.log('上传完成');
+            $( '#'+file.id ).find('.progress').fadeOut();
+        });
+
+
+        //显示 选择区域
+        var selectData = {},
+            resImg;
+        var jcrop_api;
+        //初始化
+        $("#avatarCrop").Jcrop({
+          aspectRatio:1,
+          onChange:showCoords,
+          onSelect:showCoords,
+          boxWidth: 350,
+          boxHeight: 350,
+          setSelect: [50, 50, 300, 300]
+        }, function() {
+          jcrop_api = this;
+        });
+        function showCoords(obj){
+          // $("#x").val(obj.x);
+          // $("#y").val(obj.y);
+          // $("#w").val(obj.w);
+          // $("#h").val(obj.h);
+          selectData = {
+            x: obj.x,
+            y: obj.y,
+            w: obj.w,
+            h: obj.h,
+            img: resImg
+          }
+        }
+
+        $('#setAvatar').on('click', function() {
+          console.log(selectData);
+          $.ajax({
+            url: '/api/set/avatar/',
+            type: 'POST',
+            dataType: 'json',
+            data: {data: selectData},
+          })
+          .done(function(res) {
+            console.log("success");
+            console.log(res.data);
+            $('.currentAvatar').attr('src', '/images/avatar/' + res.data);
+            $('#Uavatar').attr('src', '/images/avatar/' + res.data);
+            gUser.avatar = '/images/avatar/' + res.data;
+          })
+          .fail(function() {
+            console.log("error");
+          })
+          .always(function() {
+            console.log("complete");
+          });
+
+        });
+
+
+      });
+    </script>
+  </div>
+
+  <div class="st-setting-profile" ng-show="showForm == 2">
+    <h4 class="st-title fn pl10">个人资料</h4>
+    <div style="padding: 10px 0 20px;">
+      <div class="save-success-tip" ng-show="showSucTip">保存成功！</div>
+      <div class="save-failed-tip" ng-show="showFaiTip">保存失败，请重试！</div>
+    </div>
+    <div class="pl20 pr20">
+      <form class="clearfix" ng-submit="setMyProfile(formData)">
+        
+        <div class="mb20">
+          <label>昵称：<input type="text" ng-model="formData.nickname"></label>
+
+          <label class="ml30">性别：<select ng-model="formData.sex">
+              <option value="" ng-selected="true">--请选择性别--</option>
+              <option value="男">男</option>
+              <option value="女">女</option>
+            </select>
+          </label>
+        </div>
+        <div class="mb20">
+          <label>年龄：<input type="text" ng-model="formData.age"></label>
+          <label class="ml30">手机：<input type="text" ng-model="formData.phone"></label>
+        </div>
+        <div class="mb20">
+          <label>城市：<input type="text" ng-model="formData.city"></label>
+          <label class="ml30">职业：<input type="text" ng-model="formData.job"></label>
+        </div>
+        <div class="mb20">
+          <label>签名：<textarea name="signature" ng-model="formData.signature"></textarea></label>
+        </div>
+         <div class="mb20 tc">
+          <button class="btn-submit" type="submit">保存</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="st-setting-security" ng-show="showForm == 3">
+    <h4 class="st-title fn pl10">安全设置</h4>
+    <div style="padding: 10px 0 20px;">
+      <div class="save-success-tip" ng-show="showSucTip">修改成功！</div>
+      <div class="save-failed-tip" ng-show="showFaiTip">修改失败，请重试！</div>
+    </div>
+    <div class="pl20 pr20">
+      <form name="setMyPasswordForm" ng-submit="setMyPassword(pw)">
+        <div class="mb20">
+          <label>设置密码：<input type="password" name="newPassword" ng-model="pw.newPassword" ng-minlength="6" ng-maxlength="18" required></label>
+          <p ng-show="setMyPasswordForm.newPassword.$dirty && setMyPasswordForm.newPassword.$error.minlength || setMyPasswordForm.newPassword.$error.maxlength" style="color: #f90;">请输入长度在6~18之间(字母、数字、下划线)。</p>
+        </div>
+        <div class="mb20">
+          <label>确认密码：<input type="password" name="rePassword" ng-model="pw.rePassword" required></label>
+          <p ng-show="setMyPasswordForm.rePassword.$dirty && pw.newPassword != pw.rePassword" style="color: #f90;">两次输入密码不一致，请重试！</p>
+        </div>
+         <div class="mb20">
+          <button type="submit" ng-disabled="setMyPasswordForm.$invalid || pw.newPassword != pw.rePassword">确定</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="st-remove-account" ng-show="showForm == 4">
+    <h4 class="st-title fn pl10">注销账号</h4>
+    <div class="pl20 pr20">
+      <div class="mb20">
+        <label>注销理由： <textarea name="" style="vertical-align: top;width: 420px;"></textarea></label>
+      </div>
+      <div class="mb20">
+        <button type="button">确定</button>
+      </div>
+    </div>
+  </div>
+</div>
+

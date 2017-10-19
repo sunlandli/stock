@@ -1,0 +1,36 @@
+<div ui-view="forum" ng-init="showAddTopic = false">
+  <div class="container">
+    <div class="forum-main fl">
+      <div class="box">
+        <div class="forum-filter">
+          <ul id="topicFilter" class="nols clearfix" ng-init="filter = 1">
+            <li ng-class="{active: filter == 1}"><a href="" ng-click="getTopic('total', 'createAt.desc');filter = 1" title="">最新</a></li>
+            <li ng-class="{active: filter == 2}"><a href="" ng-click="getTopic('total', 'postCount.desc');filter = 2" title="">回复</a></li>
+            <li ng-class="{active: filter == 3}"><a href="" ng-click="getTopic('total', 'viewCount.desc');filter = 3" title="">浏览</a></li>
+          </ul>
+        </div>
+        <ul id="topicList" class="forum-topic-list nols">
+          <li class="forum-topic-item" ng-repeat="item in topicList">
+            <a ui-sref="user({id: item.user._id})" title="[[ item.user.name.first ]]">
+              <img class="avatar" ng-src="[[ item.user.avatar ]]" alt="">
+            </a>
+            <a class="title" ui-sref="forum.topic({id: item._id})" title="">[[ item.title ]]</a>
+            <div class="fr">
+              <span class="r-count" title="评论">[[ item.postCount ]]</span> /
+              <span class="v-count mr15" title="浏览">[[ item.viewCount ]]</span>
+              <span style="color: #999;">[[ item.createAt | date: 'yyyy-MM-dd' ]]</span>
+            </div>
+          </li>
+        </ul>
+        <div class="pagination pt30 pb30 tc">
+          <div id="topicPage" class="clearfix dib"></div>
+        </div>
+      </div>
+    </div>
+    <div class="forum-side fl">
+      <div ng-include="'/views/forum/includes/forum-right.html'"></div>
+    </div>
+  </div>
+  <div is-loaded ng-include="'/views/forum/includes/add-topic-modal.html'"></div>
+</div>
+
